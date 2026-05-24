@@ -4,11 +4,24 @@
   "private": true,
   "description": "VeloxLane Express + OpenAPI API server",
   "type": "module",
+  "main": "./src/server.ts",
+  "types": "./src/server.ts",
   "scripts": {
-    "build": "echo \"Scaffold pending\"",
-    "dev": "echo \"Scaffold pending\"",
-    "lint": "echo \"Scaffold pending\"",
-    "typecheck": "echo \"Scaffold pending\"",
-    "test": "echo \"Scaffold pending\""
+    "build": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }
