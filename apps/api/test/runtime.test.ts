@@ -2,13 +2,23 @@ import { describe, expect, it, vi } from "vitest";
 
 import { createShutdownHandler, registerShutdownSignals } from "../src/runtime";
 
+const createExitMock = () => {
+  const exitSignal = new Error("process.exit");
+  const exit = vi.fn<NodeJS.Process["exit"]>((_code?: string | number | null) => {
+    throw exitSignal;
+  });
+
+  return { exit, exitSignal };
+};
+
 describe("API runtime shutdown", () => {
   it("registers SIGINT and SIGTERM handlers", () => {
     const on = vi.fn();
+    const { exit } = createExitMock();
 
     registerShutdownSignals({
       process: {
-        exit: vi.fn(),
+        exit,
         exitCode: undefined,
         on,
       },
@@ -27,7 +37,7 @@ describe("API runtime shutdown", () => {
       callback?.();
       return {} as never;
     });
-    const exit = vi.fn();
+    const { exit, exitSignal } = createExitMock();
     const handler = createShutdownHandler({
       process: {
         exit,
@@ -39,8 +49,8 @@ describe("API runtime shutdown", () => {
       } as never,
     });
 
-    handler("SIGTERM");
-    handler("SIGINT");
+    expect(() => handler("SIGTERM")).toThrow(exitSignal);
+    expect(() => handler("SIGINT")).not.toThrow();
 
     expect(close).toHaveBeenCalledTimes(1);
     expect(exit).toHaveBeenCalledTimes(1);
