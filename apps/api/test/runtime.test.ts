@@ -4,9 +4,11 @@ import { createShutdownHandler, registerShutdownSignals } from "../src/runtime";
 
 const createExitMock = () => {
   const exitSignal = new Error("process.exit");
-  const exit = vi.fn<NodeJS.Process["exit"]>((_code?: string | number | null) => {
-    throw exitSignal;
-  });
+  const exit = vi.fn<NodeJS.Process["exit"]>(
+    (_code?: string | number | null) => {
+      throw exitSignal;
+    },
+  );
 
   return { exit, exitSignal };
 };
