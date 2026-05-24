@@ -1,0 +1,301 @@
+/* ============================================================================
+ * VeloxLane Design Tokens — CSS Custom Properties
+ * Source of truth: packages/design-tokens/tokens.json
+ *
+ * Usage:
+ *   @import "@veloxlane/design-tokens/tokens.css";
+ *
+ * Conventions:
+ *   --vl-color-*       brand + scale + alpha colors
+ *   --vl-surface-*     semantic surface tokens
+ *   --vl-text-*        semantic text tokens
+ *   --vl-border-*      semantic border tokens
+ *   --vl-action-*      semantic action/button tokens
+ *   --vl-status-*      semantic status tokens
+ *   --vl-space-*       spacing scale
+ *   --vl-radius-*      corner radius scale
+ *   --vl-font-*        typography
+ *   --vl-shadow-*      elevation
+ *   --vl-z-*           z-index scale
+ *   --vl-dur-*         motion durations
+ *   --vl-ease-*        motion easings
+ *   --vl-lane-*        brand lane-stripe motif
+ *
+ * DO NOT hardcode brand hex values in apps. Always reference these tokens.
+ * ============================================================================ */
+
+:root {
+  /* ---------- Brand colors ---------- */
+  --vl-color-midnight: #0a1628;
+  --vl-color-amber: #e8a03d;
+  --vl-color-lane-white: #f8f6f1;
+  --vl-color-asphalt: #3d4550;
+  --vl-color-teal: #2dbfa6;
+
+  /* ---------- Asphalt-derived neutrals ---------- */
+  --vl-color-asphalt-50: #f1f2f4;
+  --vl-color-asphalt-100: #e2e4e8;
+  --vl-color-asphalt-200: #c5c9d1;
+  --vl-color-asphalt-300: #a7aeb9;
+  --vl-color-asphalt-400: #7a8290;
+  --vl-color-asphalt-500: #5c6573;
+  --vl-color-asphalt-600: #3d4550;
+  --vl-color-asphalt-700: #2f353f;
+  --vl-color-asphalt-800: #21262e;
+  --vl-color-asphalt-900: #14181e;
+
+  /* ---------- Midnight surface scale ---------- */
+  --vl-color-midnight-base: #0a1628;
+  --vl-color-midnight-elevated: #0f1d32;
+  --vl-color-midnight-raised: #152543;
+  --vl-color-midnight-sunken: #06101f;
+
+  /* ---------- Amber scale (signal — use sparingly) ---------- */
+  --vl-color-amber-soft: #f5c98a;
+  --vl-color-amber-base: #e8a03d;
+  --vl-color-amber-hover: #f0ac51;
+  --vl-color-amber-pressed: #c9842a;
+
+  /* ---------- Teal scale (verified / escrow) ---------- */
+  --vl-color-teal-soft: #7fd8c6;
+  --vl-color-teal-base: #2dbfa6;
+  --vl-color-teal-hover: #3fceb4;
+  --vl-color-teal-pressed: #21a18b;
+
+  /* ---------- Alpha transparency ---------- */
+  --vl-color-white-a04: rgba(248, 246, 241, 0.04);
+  --vl-color-white-a08: rgba(248, 246, 241, 0.08);
+  --vl-color-white-a12: rgba(248, 246, 241, 0.12);
+  --vl-color-white-a24: rgba(248, 246, 241, 0.24);
+  --vl-color-white-a48: rgba(248, 246, 241, 0.48);
+  --vl-color-white-a72: rgba(248, 246, 241, 0.72);
+  --vl-color-black-a04: rgba(10, 22, 40, 0.04);
+  --vl-color-black-a08: rgba(10, 22, 40, 0.08);
+  --vl-color-black-a12: rgba(10, 22, 40, 0.12);
+  --vl-color-black-a24: rgba(10, 22, 40, 0.24);
+  --vl-color-black-a48: rgba(10, 22, 40, 0.48);
+  --vl-color-black-a72: rgba(10, 22, 40, 0.72);
+
+  /* ---------- Semantic: surface ---------- */
+  --vl-surface-canvas: var(--vl-color-midnight-base);
+  --vl-surface-canvas-light: var(--vl-color-lane-white);
+  --vl-surface-card: var(--vl-color-lane-white);
+  --vl-surface-card-dark: var(--vl-color-midnight-elevated);
+  --vl-surface-muted: var(--vl-color-asphalt-50);
+  --vl-surface-inverse: var(--vl-color-midnight-base);
+  --vl-surface-scrim: var(--vl-color-black-a48);
+
+  /* ---------- Semantic: text ---------- */
+  --vl-text-primary: var(--vl-color-midnight-base);
+  --vl-text-secondary: var(--vl-color-asphalt-600);
+  --vl-text-muted: var(--vl-color-asphalt-400);
+  --vl-text-on-dark: var(--vl-color-lane-white);
+  --vl-text-on-dark-muted: var(--vl-color-asphalt-300);
+  --vl-text-on-amber: var(--vl-color-midnight-base);
+  --vl-text-on-teal: var(--vl-color-midnight-base);
+  --vl-text-link: var(--vl-color-amber-base);
+  --vl-text-inverse: var(--vl-color-lane-white);
+
+  /* ---------- Semantic: border ---------- */
+  --vl-border-subtle: var(--vl-color-black-a08);
+  --vl-border-default: var(--vl-color-asphalt-200);
+  --vl-border-strong: var(--vl-color-asphalt-600);
+  --vl-border-on-dark: var(--vl-color-white-a12);
+  --vl-border-focus: var(--vl-color-amber-base);
+
+  /* ---------- Semantic: action ---------- */
+  --vl-action-primary-bg: var(--vl-color-amber-base);
+  --vl-action-primary-hover: var(--vl-color-amber-hover);
+  --vl-action-primary-pressed: var(--vl-color-amber-pressed);
+  --vl-action-primary-fg: var(--vl-color-midnight-base);
+  --vl-action-secondary-bg: var(--vl-color-lane-white);
+  --vl-action-secondary-fg: var(--vl-color-midnight-base);
+  --vl-action-ghost-fg: var(--vl-color-lane-white);
+  --vl-action-disabled-bg: var(--vl-color-asphalt-200);
+  --vl-action-disabled-fg: var(--vl-color-asphalt-500);
+
+  /* ---------- Semantic: status ---------- */
+  --vl-status-verified: var(--vl-color-teal-base);
+  --vl-status-verified-bg: rgba(45, 191, 166, 0.12);
+  --vl-status-warning: var(--vl-color-amber-base);
+  --vl-status-warning-bg: rgba(232, 160, 61, 0.12);
+  /* danger uses dark neutral weight, not a red hue, per brand spec.
+     Severity is communicated via warning icon + explicit copy. */
+  --vl-status-danger: var(--vl-color-asphalt-800);
+  --vl-status-danger-bg: var(--vl-color-asphalt-50);
+  --vl-status-info: var(--vl-color-teal-base);
+
+  /* ---------- Spacing (4px base, 2px micro) ---------- */
+  --vl-space-0: 0;
+  --vl-space-px: 1px;
+  --vl-space-1: 2px;
+  --vl-space-2: 4px;
+  --vl-space-3: 8px;
+  --vl-space-4: 12px;
+  --vl-space-5: 16px;
+  --vl-space-6: 20px;
+  --vl-space-7: 24px;
+  --vl-space-8: 32px;
+  --vl-space-9: 40px;
+  --vl-space-10: 48px;
+  --vl-space-11: 64px;
+  --vl-space-12: 80px;
+  --vl-space-13: 96px;
+  --vl-space-14: 128px;
+
+  /* ---------- Radius ---------- */
+  --vl-radius-none: 0;
+  --vl-radius-xs: 4px;
+  --vl-radius-sm: 8px;
+  --vl-radius-md: 12px; /* card radius — brand spec */
+  --vl-radius-lg: 16px;
+  --vl-radius-xl: 24px;
+  --vl-radius-pill: 9999px;
+  --vl-radius-card: var(--vl-radius-md);
+
+  /* ---------- Typography: families ---------- */
+  --vl-font-family-display:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --vl-font-family-body:
+    "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --vl-font-family-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ---------- Typography: weights ---------- */
+  --vl-font-weight-regular: 400;
+  --vl-font-weight-medium: 500;
+  --vl-font-weight-semibold: 600;
+  --vl-font-weight-bold: 700;
+
+  /* ---------- Typography: tracking ---------- */
+  --vl-letter-spacing-tight: -0.03em; /* display per brand spec */
+  --vl-letter-spacing-normal: 0;
+  --vl-letter-spacing-wide: 0.04em;
+  --vl-letter-spacing-wider: 0.08em;
+
+  /* ---------- Typography: leading ---------- */
+  --vl-line-height-tight: 1.1;
+  --vl-line-height-snug: 1.25;
+  --vl-line-height-normal: 1.5;
+  --vl-line-height-relaxed: 1.65;
+
+  /* ---------- Typography: sizes ---------- */
+  --vl-font-size-xs: 12px;
+  --vl-font-size-sm: 14px;
+  --vl-font-size-base: 16px;
+  --vl-font-size-md: 18px;
+  --vl-font-size-lg: 20px;
+  --vl-font-size-xl: 24px;
+  --vl-font-size-2xl: 32px;
+  --vl-font-size-3xl: 40px;
+  --vl-font-size-4xl: 56px;
+  --vl-font-size-5xl: 72px;
+
+  /* ---------- Elevation ---------- */
+  --vl-shadow-0: none;
+  --vl-shadow-1:
+    0 1px 2px 0 rgba(10, 22, 40, 0.06), 0 1px 1px 0 rgba(10, 22, 40, 0.04);
+  --vl-shadow-2:
+    0 2px 6px -1px rgba(10, 22, 40, 0.1), 0 1px 3px 0 rgba(10, 22, 40, 0.06);
+  --vl-shadow-3:
+    0 8px 24px -4px rgba(10, 22, 40, 0.18),
+    0 4px 8px -2px rgba(10, 22, 40, 0.08);
+  --vl-shadow-4:
+    0 16px 48px -8px rgba(10, 22, 40, 0.28),
+    0 6px 16px -4px rgba(10, 22, 40, 0.12);
+  --vl-shadow-amber-glow: 0 0 0 4px rgba(232, 160, 61, 0.24);
+  --vl-shadow-teal-glow: 0 0 0 4px rgba(45, 191, 166, 0.2);
+  --vl-shadow-inset-dark: inset 0 1px 0 0 rgba(248, 246, 241, 0.06);
+
+  /* ---------- z-index ---------- */
+  --vl-z-hide: -1;
+  --vl-z-base: 0;
+  --vl-z-raised: 10;
+  --vl-z-docked: 100;
+  --vl-z-dropdown: 1000;
+  --vl-z-sticky: 1100;
+  --vl-z-banner: 1200;
+  --vl-z-overlay: 1300;
+  --vl-z-modal: 1400;
+  --vl-z-popover: 1500;
+  --vl-z-skiplink: 1600;
+  --vl-z-toast: 1700;
+  --vl-z-tooltip: 1900;
+
+  /* ---------- Motion: duration ---------- */
+  --vl-dur-instant: 0ms;
+  --vl-dur-fast: 120ms;
+  --vl-dur-base: 200ms;
+  --vl-dur-slow: 320ms;
+  --vl-dur-slower: 480ms;
+
+  /* ---------- Motion: easing ---------- */
+  --vl-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --vl-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --vl-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --vl-ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+  --vl-ease-linear: linear;
+
+  /* ---------- Motion: prebuilt transitions ---------- */
+  --vl-transition-ui: all var(--vl-dur-base) var(--vl-ease-standard);
+  --vl-transition-hover:
+    background-color var(--vl-dur-fast) var(--vl-ease-standard),
+    color var(--vl-dur-fast) var(--vl-ease-standard),
+    border-color var(--vl-dur-fast) var(--vl-ease-standard);
+  --vl-transition-elevate:
+    box-shadow var(--vl-dur-base) var(--vl-ease-standard),
+    transform var(--vl-dur-base) var(--vl-ease-standard);
+
+  /* ---------- Brand motif: dashed lane stripe ---------- */
+  --vl-lane-color: var(--vl-color-amber-base);
+  --vl-lane-thickness: 2px;
+  --vl-lane-dash: 12px;
+  --vl-lane-gap: 8px;
+  --vl-lane-skew: -12deg;
+  --vl-lane-image: repeating-linear-gradient(
+    90deg,
+    var(--vl-color-amber-base) 0 12px,
+    transparent 12px 20px
+  );
+  --vl-lane-image-diag: repeating-linear-gradient(
+    -12deg,
+    var(--vl-color-amber-base) 0 12px,
+    transparent 12px 20px
+  );
+
+  /* ---------- Brand: focus ring ---------- */
+  --vl-focus-ring-width: 2px;
+  --vl-focus-ring-offset: 2px;
+  --vl-focus-ring-color: var(--vl-color-amber-base);
+
+  /* ---------- Breakpoints (informational; for JS) ---------- */
+  --vl-bp-sm: 640px;
+  --vl-bp-md: 768px;
+  --vl-bp-lg: 1024px;
+  --vl-bp-xl: 1280px;
+  --vl-bp-2xl: 1536px;
+}
+
+/* Reduced motion: collapse durations to instant. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vl-dur-fast: 0ms;
+    --vl-dur-base: 0ms;
+    --vl-dur-slow: 0ms;
+    --vl-dur-slower: 0ms;
+  }
+}
+
+/* Reusable utility class for the dashed amber lane stripe divider. */
+.vl-lane-stripe {
+  display: block;
+  width: 100%;
+  height: var(--vl-lane-thickness);
+  background-image: var(--vl-lane-image);
+  background-repeat: repeat-x;
+  background-size: calc(var(--vl-lane-dash) + var(--vl-lane-gap))
+    var(--vl-lane-thickness);
+  border: 0;
+}

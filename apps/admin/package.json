@@ -1,0 +1,14 @@
+{
+  "name": "@veloxlane/admin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "VeloxLane staff admin console",
+  "type": "module",
+  "scripts": {
+    "build": "echo \"Scaffold pending\"",
+    "dev": "echo \"Scaffold pending\"",
+    "lint": "echo \"Scaffold pending\"",
+    "typecheck": "echo \"Scaffold pending\"",
+    "test": "echo \"Scaffold pending\""
+  }
+}

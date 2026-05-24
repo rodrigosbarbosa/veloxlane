@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build outputs
+.next/
+out/
+dist/
+build/
+.turbo/
+coverage/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# mobile
+.expo/
+.expo-shared/
+android/
+ios/
+
+# generated
+apps/api/prisma/migrations/

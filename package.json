@@ -1,0 +1,26 @@
+{
+  "name": "veloxlane",
+  "version": "0.0.0",
+  "private": true,
+  "description": "VeloxLane — private-party vehicle marketplace monorepo.",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev --parallel",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}
