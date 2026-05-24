@@ -8,6 +8,10 @@ describe("VeloxLane API scaffold", () => {
     const response = await request(createApp()).get("/health");
 
     expect(response.status).toBe(200);
+    expect(response.headers["x-powered-by"]).toBeUndefined();
+    expect(response.headers["x-content-type-options"]).toBe("nosniff");
+    expect(response.headers["x-frame-options"]).toBe("SAMEORIGIN");
+    expect(response.headers["x-dns-prefetch-control"]).toBe("off");
     expect(response.body).toEqual({
       status: "ok",
       service: "veloxlane-api",

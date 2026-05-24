@@ -1,7 +1,2 @@
-import { app } from "./server";
-
-const port = Number(process.env.PORT ?? 3000);
-
-app.listen(port, () => {
-  console.log(`veloxlane-api listening on port ${port}`);
-});
+export { createApp } from "./app";
+export { openApiDocument } from "./openapi";
