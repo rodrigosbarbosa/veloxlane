@@ -37,4 +37,5 @@ android/
 ios/
 
 # generated
+*.tsbuildinfo
 apps/api/prisma/migrations/
