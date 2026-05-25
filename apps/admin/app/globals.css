@@ -1,0 +1,245 @@
+@import "@veloxlane/design-tokens/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-inter), var(--vl-font-family-body);
+    background: var(--vl-surface-canvas);
+    color: var(--vl-text-on-dark);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer components {
+  .admin-shell {
+    @apply mx-auto flex min-h-screen max-w-7xl flex-col gap-6 px-5 py-6 md:px-8 md:py-8;
+  }
+
+  .admin-hero {
+    background: linear-gradient(
+      145deg,
+      var(--vl-color-midnight-raised) 0%,
+      var(--vl-surface-canvas) 62%,
+      color-mix(
+          in srgb,
+          var(--vl-color-teal-base) 16%,
+          var(--vl-surface-canvas)
+        )
+        100%
+    );
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-lg);
+    box-shadow: var(--vl-shadow-3);
+    @apply overflow-hidden px-5 py-6 md:px-8 md:py-8;
+  }
+
+  .admin-topbar {
+    @apply mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .brand-lockup {
+    font-size: var(--vl-font-size-xl);
+    font-style: italic;
+    font-weight: var(--vl-font-weight-semibold);
+    letter-spacing: var(--vl-letter-spacing-tight);
+    @apply inline-flex flex-wrap items-baseline;
+  }
+
+  .brand-x {
+    color: var(--vl-action-primary-bg);
+    @apply mx-0.5 inline-block;
+    transform: skewX(var(--vl-lane-skew));
+  }
+
+  .brand-console {
+    color: var(--vl-text-on-dark-muted);
+    font-size: var(--vl-font-size-sm);
+    font-style: normal;
+    letter-spacing: 0;
+    @apply ml-3;
+  }
+
+  .hero-grid {
+    @apply grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.8fr)] lg:items-end;
+  }
+
+  .hero-copy-block {
+    @apply flex max-w-3xl flex-col gap-5;
+  }
+
+  .eyebrow,
+  .panel-kicker,
+  .vl-metric-label {
+    color: var(--vl-color-teal-soft);
+    font-size: var(--vl-font-size-sm);
+    font-weight: var(--vl-font-weight-semibold);
+    letter-spacing: var(--vl-letter-spacing-wide);
+    text-transform: uppercase;
+    @apply m-0;
+  }
+
+  .hero-copy-block h1,
+  .access-panel h2,
+  .console-card h2 {
+    font-style: italic;
+    font-weight: var(--vl-font-weight-semibold);
+    letter-spacing: var(--vl-letter-spacing-tight);
+    line-height: var(--vl-line-height-tight);
+    @apply m-0;
+  }
+
+  .hero-copy-block h1 {
+    font-size: clamp(var(--vl-font-size-2xl), 3vw, var(--vl-font-size-4xl));
+  }
+
+  .hero-copy-block p,
+  .access-panel p,
+  .console-card p,
+  .vl-metric-detail {
+    color: var(--vl-text-on-dark-muted);
+    font-size: var(--vl-font-size-base);
+    line-height: var(--vl-line-height-relaxed);
+    @apply m-0;
+  }
+
+  .funds-rule {
+    background: var(--vl-status-verified-bg);
+    border: 1px solid
+      color-mix(in srgb, var(--vl-status-verified) 42%, transparent);
+    border-radius: var(--vl-radius-md);
+    color: var(--vl-text-on-dark);
+    @apply px-4 py-3;
+  }
+
+  .vl-surface-panel {
+    background: var(--vl-surface-card-dark);
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-card);
+    box-shadow: var(--vl-shadow-1);
+    @apply p-5;
+  }
+
+  .access-panel {
+    @apply flex flex-col gap-4;
+  }
+
+  .access-panel h2,
+  .console-card h2 {
+    color: var(--vl-text-on-dark);
+    font-size: var(--vl-font-size-xl);
+  }
+
+  .role-links {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .role-links a {
+    background: var(--vl-color-white-a08);
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-pill);
+    color: var(--vl-text-on-dark);
+    font-size: var(--vl-font-size-sm);
+    font-weight: var(--vl-font-weight-medium);
+    @apply px-3 py-2;
+  }
+
+  .role-links a:hover {
+    background: var(--vl-color-white-a12);
+  }
+
+  .vl-status-pill {
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-pill);
+    font-size: var(--vl-font-size-sm);
+    font-weight: var(--vl-font-weight-medium);
+    @apply inline-flex w-fit items-center gap-2 px-3 py-2;
+  }
+
+  .vl-status-pill-neutral {
+    background: var(--vl-color-white-a08);
+    color: var(--vl-text-on-dark-muted);
+  }
+
+  .vl-status-pill-success {
+    background: var(--vl-status-verified-bg);
+    color: var(--vl-status-verified);
+  }
+
+  .vl-status-pill-warning,
+  .vl-status-pill-danger {
+    background: var(--vl-color-white-a08);
+    color: var(--vl-action-primary-bg);
+  }
+
+  .metrics-strip {
+    @apply grid gap-4 md:grid-cols-3;
+  }
+
+  .vl-metric-tile {
+    background: var(--vl-surface-card);
+    border: 1px solid var(--vl-border-default);
+    border-radius: var(--vl-radius-card);
+    color: var(--vl-text-primary);
+    @apply p-5;
+  }
+
+  .vl-metric-label {
+    color: var(--vl-text-secondary);
+  }
+
+  .vl-metric-value {
+    color: var(--vl-text-primary);
+    font-size: var(--vl-font-size-2xl);
+    font-weight: var(--vl-font-weight-semibold);
+    line-height: var(--vl-line-height-tight);
+    @apply m-0 mt-3;
+  }
+
+  .vl-metric-detail {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+    @apply mt-2;
+  }
+
+  .console-grid {
+    @apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .console-card {
+    @apply flex min-h-64 flex-col gap-4;
+  }
+
+  .console-card-locked {
+    background: var(--vl-color-white-a04);
+  }
+
+  .card-heading-row {
+    @apply flex items-center justify-between gap-4;
+  }
+
+  .icon-badge {
+    background: var(--vl-status-verified-bg);
+    border-radius: var(--vl-radius-md);
+    color: var(--vl-status-verified);
+    @apply inline-flex h-11 w-11 items-center justify-center;
+  }
+
+  .card-metric {
+    color: var(--vl-text-on-dark);
+    font-size: var(--vl-font-size-sm);
+    font-weight: var(--vl-font-weight-semibold);
+    @apply mt-auto;
+  }
+}
