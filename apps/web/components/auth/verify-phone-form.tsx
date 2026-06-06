@@ -101,6 +101,11 @@ export function VerifyPhoneForm() {
       retryAfterSeconds?: number;
     };
     if (!response.ok) {
+      if (response.status === 401) {
+        router.push("/login?reason=sign-in-required");
+        return;
+      }
+
       if (response.status === 429) {
         handleRateLimit(payload.retryAfterSeconds);
         setPhonePending(false);
@@ -143,6 +148,11 @@ export function VerifyPhoneForm() {
     };
 
     if (!response.ok) {
+      if (response.status === 401) {
+        router.push("/login?reason=sign-in-required");
+        return;
+      }
+
       if (response.status === 429) {
         handleRateLimit(payload.retryAfterSeconds);
         setOtpPending(false);
@@ -206,6 +216,11 @@ export function VerifyPhoneForm() {
     };
 
     if (!response.ok) {
+      if (response.status === 401) {
+        router.push("/login?reason=sign-in-required");
+        return;
+      }
+
       if (response.status === 429) {
         handleRateLimit(payload.retryAfterSeconds);
         return;

@@ -45,7 +45,10 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ message: "Sign in required." }, { status: 401 });
+    return NextResponse.json(
+      { message: copy.auth.errorSignInRequired },
+      { status: 401 },
+    );
   }
 
   const phoneAvailable = await assertPhoneAvailable(normalized, user.id);

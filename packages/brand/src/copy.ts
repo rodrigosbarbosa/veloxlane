@@ -52,6 +52,10 @@ export const copy = {
     biometricEnable: "Use Face ID next time",
     loading: "Working on it…",
     successSignup: "Account created. Check your inbox for a welcome note.",
+    successSignupConfirmEmail:
+      "Account created. Confirm your email first — we sent a link to your inbox. Then sign in to verify your phone.",
+    errorSignInRequired:
+      "Sign in to verify your phone. If you just signed up, confirm your email first.",
     successLogin: "Signed in. Taking you to the next step.",
     successForgot: "If that email is registered, a reset link is on its way.",
     successPhone: "Phone verified. One step closer to the deal.",

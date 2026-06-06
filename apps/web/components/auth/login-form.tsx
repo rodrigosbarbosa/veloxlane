@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { mapSupabaseAuthError } from "@veloxlane/auth";
+import { advanceOnboardingStep, mapSupabaseAuthError } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
 import {
   loginSchema,
@@ -10,7 +10,7 @@ import {
 } from "@veloxlane/schemas";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
@@ -25,7 +25,15 @@ export function LoginForm() {
   const [status, setStatus] = useState<{
     tone: "error" | "success";
     message: string;
-  } | null>(null);
+  } | null>(() => {
+    if (searchParams.get("reason") === "sign-in-required") {
+      return {
+        tone: "error",
+        message: copy.auth.errorSignInRequired,
+      };
+    }
+    return null;
+  });
   const [pending, setPending] = useState(false);
   const {
     register,
@@ -39,11 +47,62 @@ export function LoginForm() {
     },
   });
 
+  useEffect(() => {
+    if (searchParams.get("reason") === "sign-in-required") {
+      setStatus({
+        tone: "error",
+        message: copy.auth.errorSignInRequired,
+      });
+    }
+  }, [searchParams]);
+
+  const syncProfileFromSignupMetadata = async (
+    supabase: ReturnType<typeof createClient>,
+    userId: string,
+  ) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const role = user?.user_metadata?.role;
+    const fullName = user?.user_metadata?.full_name;
+    if (
+      typeof role !== "string" ||
+      (role !== "buyer" && role !== "seller") ||
+      typeof fullName !== "string"
+    ) {
+      return;
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_step, role")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (
+      !profile ||
+      (profile.onboarding_step !== "signup" && profile.role !== "user")
+    ) {
+      return;
+    }
+
+    const nextStep = advanceOnboardingStep("signup", role, "signup_complete");
+    await supabase
+      .from("profiles")
+      .update({
+        full_name: fullName,
+        role,
+        onboarding_step: nextStep,
+      })
+      .eq("id", userId);
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     setPending(true);
     setStatus(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword(values);
+    const { data, error } = await supabase.auth.signInWithPassword(values);
 
     if (error) {
       const code = mapSupabaseAuthError(error.message);
@@ -56,6 +115,10 @@ export function LoginForm() {
       });
       setPending(false);
       return;
+    }
+
+    if (data.user) {
+      await syncProfileFromSignupMetadata(supabase, data.user.id);
     }
 
     setStatus({ tone: "success", message: copy.auth.successLogin });

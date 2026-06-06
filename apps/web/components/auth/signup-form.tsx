@@ -45,6 +45,7 @@ export function SignupForm() {
       options: {
         data: {
           full_name: values.fullName,
+          role: values.role,
         },
       },
     });
@@ -69,6 +70,15 @@ export function SignupForm() {
 
     if (!data.user) {
       setStatus({ tone: "error", message: copy.auth.errorGeneric });
+      setPending(false);
+      return;
+    }
+
+    if (!data.session) {
+      setStatus({
+        tone: "success",
+        message: copy.auth.successSignupConfirmEmail,
+      });
       setPending(false);
       return;
     }
