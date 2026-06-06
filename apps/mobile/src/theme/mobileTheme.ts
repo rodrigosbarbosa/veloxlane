@@ -104,7 +104,7 @@ export const authFieldStyles = {
     color: colors.text.primary,
     height: 44,
     paddingHorizontal: spacing[4],
-  } satisfies ViewStyle,
+  } satisfies ViewStyle & Pick<TextStyle, "color">,
   placeholderColor: colors.text.muted,
   errorText: { color: colors.status.danger },
   helperText: { color: colors.text.onDarkMuted },

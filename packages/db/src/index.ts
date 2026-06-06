@@ -109,6 +109,55 @@ export type Database = {
         };
         Relationships: [];
       };
+      payments: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: string;
+          amount_cents: number;
+          stripe_payment_intent: string;
+          status: string;
+          related_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          type: string;
+          amount_cents: number;
+          stripe_payment_intent: string;
+          status?: string;
+          related_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          type?: string;
+          amount_cents?: number;
+          stripe_payment_intent?: string;
+          status?: string;
+          related_id?: string | null;
+        };
+        Relationships: [];
+      };
+      webhook_events: {
+        Row: {
+          id: string;
+          source: string;
+          processed_at: string;
+        };
+        Insert: {
+          id: string;
+          source?: string;
+          processed_at?: string;
+        };
+        Update: {
+          source?: string;
+          processed_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -121,7 +170,9 @@ export type Tables<T extends keyof Database["public"]["Tables"]> =
   Database["public"]["Tables"][T]["Row"];
 
 export const listingTable = "listings" as const;
+export const paymentsTable = "payments" as const;
 export const profilesTable = "profiles" as const;
+export const webhookEventsTable = "webhook_events" as const;
 
 export {
   createSupabaseClient,
@@ -129,8 +180,12 @@ export {
 } from "./create-client";
 
 export type {
-  ProfileRow,
-  ProfileUpdate,
+  PaymentInsert,
+  PaymentRow,
+  PaymentUpdate,
   PhoneRateLimitRow,
   PhoneRateLimitUpdate,
+  ProfileRow,
+  ProfileUpdate,
+  WebhookEventRow,
 } from "./tables";
