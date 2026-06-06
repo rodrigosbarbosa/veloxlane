@@ -1,4 +1,5 @@
-import { test as base, type Page } from "@playwright/test";
+import { copy } from "@veloxlane/brand/copy";
+import { test as base, type Page, type Route } from "@playwright/test";
 import { setupServer } from "msw/node";
 
 import { createAuthHandlers, createDefaultAuthState } from "../mocks/handlers";
@@ -18,40 +19,63 @@ async function installStripeMock(page: Page, state: MockAuthState) {
       __stripeIdentityShouldFail?: boolean;
     };
     win.__stripeIdentityShouldFail = shouldFail;
-
-    const stripeModule = {
-      loadStripe: async () => ({
-        verifyIdentity: async () => {
-          if (win.__stripeIdentityShouldFail) {
-            return { error: { message: "verification_failed" } };
-          }
-          return { error: null };
-        },
-      }),
-    };
-
-    Object.defineProperty(window, "__veloxlaneStripeMock", {
-      value: stripeModule,
-      configurable: true,
-    });
   }, state.stripeShouldFail);
+}
 
-  await page.route("**/@stripe/stripe-js/**", async (route) => {
+async function handlePhoneRoute(route: Route, authState: MockAuthState) {
+  const body = route.request().postDataJSON() as {
+    action: string;
+    phone: string;
+    token?: string;
+  };
+  const digits = body.phone.replace(/\D/g, "");
+  const e164 = digits.startsWith("1") ? `+${digits}` : `+1${digits}`;
+
+  if (body.action === "send" || body.action === "resend") {
+    await route.fulfill({ json: { ok: true } });
+    return;
+  }
+
+  if (body.token !== "123456") {
+    const limit = authState.otpLimits.get(e164) ?? {
+      verify_attempts: 0,
+      resend_attempts: 0,
+      window_started_at: new Date().toISOString(),
+      cooldown_until: null,
+    };
+    limit.verify_attempts += 1;
+    authState.otpLimits.set(e164, limit);
+
+    if (limit.verify_attempts >= 3) {
+      limit.cooldown_until = new Date(
+        Date.now() + 24 * 60 * 60 * 1000,
+      ).toISOString();
+      await route.fulfill({
+        status: 429,
+        json: { message: copy.auth.errorRateLimited },
+      });
+      return;
+    }
+
     await route.fulfill({
-      status: 200,
-      contentType: "application/javascript",
-      body: `
-        export const loadStripe = async () => {
-          const shouldFail = window.__stripeIdentityShouldFail === true;
-          return {
-            verifyIdentity: async () => {
-              if (shouldFail) return { error: { message: 'verification_failed' } };
-              return { error: null };
-            },
-          };
-        };
-      `,
+      status: 400,
+      json: { message: "Invalid code. Try again." },
     });
+    return;
+  }
+
+  if (authState.profile) {
+    authState.profile.phone = e164;
+    authState.profile.phone_verified = true;
+    authState.profile.onboarding_step =
+      authState.profile.role === "seller" ? "identity" : "complete";
+  }
+
+  await route.fulfill({
+    json: {
+      ok: true,
+      next: authState.profile?.role === "seller" ? "/verify-id" : "/",
+    },
   });
 }
 
@@ -62,7 +86,7 @@ export const test = base.extend<AuthFixtures>({
   },
 
   mockAuth: [
-    async ({ page, authState }, use) => {
+    async ({ page, context, authState }, use) => {
       const server = setupServer(...createAuthHandlers(() => authState));
       server.listen({ onUnhandledRequest: "bypass" });
 
@@ -72,7 +96,7 @@ export const test = base.extend<AuthFixtures>({
         process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321"
       ).replace(/\/$/, "");
 
-      await page.route(`${supabaseOrigin}/**`, async (route) => {
+      await context.route(`${supabaseOrigin}/**`, async (route) => {
         const request = route.request();
         const url = new URL(request.url());
         const path = url.pathname;
@@ -178,110 +202,39 @@ export const test = base.extend<AuthFixtures>({
         await route.continue();
       });
 
-      await page.route("**/api/auth/**", async (route) => {
-        const request = route.request();
-        const url = new URL(request.url());
+      await context.route(/\/api\/auth\/phone$/, async (route) => {
+        if (route.request().method() === "POST") {
+          await handlePhoneRoute(route, authState);
+          return;
+        }
+        await route.continue();
+      });
 
-        if (
-          request.method() === "POST" &&
-          url.pathname === "/api/auth/welcome"
-        ) {
+      await context.route(/\/api\/auth\/welcome$/, async (route) => {
+        if (route.request().method() === "POST") {
           await route.fulfill({ json: { ok: true } });
           return;
         }
+        await route.continue();
+      });
 
-        if (request.method() === "POST" && url.pathname === "/api/auth/phone") {
-          const body = request.postDataJSON() as {
-            action: string;
-            phone: string;
-            token?: string;
-          };
-          const digits = body.phone.replace(/\D/g, "");
-          const e164 = digits.startsWith("1") ? `+${digits}` : `+1${digits}`;
+      await context.route(/\/api\/auth\/next-step$/, async (route) => {
+        const next =
+          authState.profile?.onboarding_step === "identity"
+            ? "/verify-id"
+            : "/";
+        await route.fulfill({ body: next });
+      });
 
-          if (body.action === "send" || body.action === "resend") {
-            await route.fulfill({ json: { ok: true } });
-            return;
-          }
-
-          if (body.token !== "123456") {
-            const limit = authState.otpLimits.get(e164) ?? {
-              verify_attempts: 0,
-              resend_attempts: 0,
-              window_started_at: new Date().toISOString(),
-              cooldown_until: null,
-            };
-            limit.verify_attempts += 1;
-            authState.otpLimits.set(e164, limit);
-
-            if (limit.verify_attempts >= 3) {
-              limit.cooldown_until = new Date(
-                Date.now() + 24 * 60 * 60 * 1000,
-              ).toISOString();
-              await route.fulfill({
-                status: 429,
-                json: {
-                  message:
-                    "Too many attempts. Wait a bit, then try again — we keep bad actors out of the lane.",
-                },
-              });
-              return;
-            }
-
-            await route.fulfill({
-              status: 400,
-              json: { message: "Invalid code. Try again." },
-            });
-            return;
-          }
-
-          if (authState.profile) {
-            authState.profile.phone = e164;
-            authState.profile.phone_verified = true;
-            authState.profile.onboarding_step =
-              authState.profile.role === "seller" ? "identity" : "complete";
-          }
-
+      await context.route(/\/api\/auth\/identity\/session$/, async (route) => {
+        if (authState.stripeShouldFail) {
           await route.fulfill({
-            json: {
-              ok: true,
-              next: authState.profile?.role === "seller" ? "/verify-id" : "/",
-            },
+            status: 503,
+            json: { message: copy.auth.errorGeneric },
           });
           return;
         }
-
-        if (
-          request.method() === "GET" &&
-          url.pathname === "/api/auth/next-step"
-        ) {
-          const next =
-            authState.profile?.onboarding_step === "identity"
-              ? "/verify-id"
-              : "/";
-          await route.fulfill({ body: next });
-          return;
-        }
-
-        if (
-          request.method() === "POST" &&
-          url.pathname === "/api/auth/identity/session"
-        ) {
-          if (authState.stripeShouldFail) {
-            await route.fulfill({
-              status: 503,
-              json: {
-                message:
-                  "Something went wrong on our end. Try again in a moment — your progress is saved.",
-              },
-            });
-            return;
-          }
-          await route.fulfill({ json: { clientSecret: "vs_test_mock" } });
-          return;
-        }
-
-        await route.continue();
+        await route.fulfill({ json: { clientSecret: "vs_test_mock" } });
       });
 
       await use();
@@ -296,7 +249,6 @@ export async function seedAuthenticatedSeller(page: Page) {
   const state = createDefaultAuthState();
   await page.addInitScript(
     ({ accessToken, userId }) => {
-      document.cookie = `sb-mock-auth-token=${accessToken}; path=/`;
       localStorage.setItem(
         "sb-127-auth-token",
         JSON.stringify({

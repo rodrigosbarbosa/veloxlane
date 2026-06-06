@@ -1,6 +1,6 @@
 import { copy } from "@veloxlane/brand/copy";
 
-import { expect, test } from "./fixtures/auth";
+import { expect, seedAuthenticatedSeller, test } from "./fixtures/auth";
 
 const strongPassword = "VeloxLane1";
 const testPhone = "5555550100";
@@ -15,15 +15,17 @@ test.describe("auth onboarding", () => {
 
     await page.getByLabel(copy.auth.fullNameLabel).fill("Test Seller");
     await page.getByLabel(copy.auth.emailLabel).fill("seller@example.com");
-    await page.getByLabel(copy.auth.passwordLabel).fill(strongPassword);
-    await page.getByLabel(copy.auth.confirmPasswordLabel).fill(strongPassword);
+    await page.locator("#password").fill(strongPassword);
+    await page.locator("#confirmPassword").fill(strongPassword);
     await page.getByRole("radio", { name: copy.auth.roleSeller }).check();
 
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
     await expect(page).toHaveURL(/\/verify-phone/);
 
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await page.getByLabel(copy.auth.phoneLabel).fill(`+1${testPhone}`);
+    const sendCode = page.waitForResponse(/\/api\/auth\/phone$/);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
+    await sendCode;
 
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
     await page.getByLabel(copy.auth.otpLabel).fill(validOtp);
@@ -50,15 +52,15 @@ test.describe("auth onboarding", () => {
     await page.goto("/signup");
 
     await page.getByLabel(copy.auth.emailLabel).fill("buyer@example.com");
-    await page.getByLabel(copy.auth.passwordLabel).fill("short");
-    await page.getByLabel(copy.auth.confirmPasswordLabel).fill("short");
+    await page.locator("#password").fill("short");
+    await page.locator("#confirmPassword").fill("short");
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
 
     await expect(
       page.getByText("Password must be at least 8 characters."),
     ).toBeVisible();
-    await page.getByLabel(copy.auth.passwordLabel).fill("lowercase1");
-    await page.getByLabel(copy.auth.confirmPasswordLabel).fill("lowercase1");
+    await page.locator("#password").fill("lowercase1");
+    await page.locator("#confirmPassword").fill("lowercase1");
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
     await expect(
       page.getByText("Include at least one uppercase letter."),
@@ -83,8 +85,10 @@ test.describe("auth onboarding", () => {
     };
 
     await page.goto("/verify-phone");
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await page.getByLabel(copy.auth.phoneLabel).fill(`+1${testPhone}`);
+    const sendCode = page.waitForResponse(/\/api\/auth\/phone$/);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
+    await sendCode;
 
     const otpField = page.getByLabel(copy.auth.otpLabel);
     await expect(otpField).toBeVisible();
@@ -115,7 +119,12 @@ test.describe("auth onboarding", () => {
     };
     authState.stripeShouldFail = true;
 
+    await seedAuthenticatedSeller(page);
     await page.goto("/verify-id");
+    await page.waitForResponse(/\/rest\/v1\/profiles/);
+    await expect(
+      page.getByRole("button", { name: copy.auth.submitIdentity }),
+    ).toBeVisible();
     await page.getByRole("button", { name: copy.auth.submitIdentity }).click();
 
     await expect(page.getByText(copy.auth.errorGeneric)).toBeVisible();
@@ -142,8 +151,10 @@ test.describe("auth onboarding", () => {
     };
 
     await page.goto("/verify-phone");
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await page.getByLabel(copy.auth.phoneLabel).fill(`+1${testPhone}`);
+    const sendCode = page.waitForResponse(/\/api\/auth\/phone$/);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
+    await sendCode;
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
 
     await page.reload();
@@ -160,10 +171,10 @@ test.describe("auth onboarding", () => {
     await expect(page.getByLabel(copy.auth.emailLabel)).toBeFocused();
 
     await page.keyboard.press("Tab");
-    await expect(page.getByLabel(copy.auth.passwordLabel)).toBeFocused();
+    await expect(page.locator("#password")).toBeFocused();
 
     await page.keyboard.press("Tab");
-    await expect(page.getByLabel(copy.auth.confirmPasswordLabel)).toBeFocused();
+    await expect(page.locator("#confirmPassword")).toBeFocused();
 
     await page.keyboard.press("Tab");
     await expect(
