@@ -1,5 +1,6 @@
-import { Redirect } from "expo-router";
+import { useAuthRedirect } from "~/features/auth/useAuthRedirect";
 
 export default function Index() {
-  return <Redirect href="/(tabs)/browse" />;
+  useAuthRedirect();
+  return null;
 }

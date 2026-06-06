@@ -17,22 +17,76 @@ export type Database = {
         Row: {
           id: string;
           email: string;
+          phone: string | null;
+          full_name: string | null;
           role: string;
+          status: string;
           id_verified: boolean;
+          phone_verified: boolean;
+          onboarding_step: string;
+          identity_attempts: number;
+          identity_manual_review: boolean;
+          risk_score: number;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id: string;
           email: string;
+          phone?: string | null;
+          full_name?: string | null;
           role?: string;
+          status?: string;
           id_verified?: boolean;
+          phone_verified?: boolean;
+          onboarding_step?: string;
+          identity_attempts?: number;
+          identity_manual_review?: boolean;
+          risk_score?: number;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           email?: string;
+          phone?: string | null;
+          full_name?: string | null;
           role?: string;
+          status?: string;
           id_verified?: boolean;
+          phone_verified?: boolean;
+          onboarding_step?: string;
+          identity_attempts?: number;
+          identity_manual_review?: boolean;
+          risk_score?: number;
         };
+        Relationships: [];
+      };
+      auth_phone_rate_limits: {
+        Row: {
+          phone: string;
+          verify_attempts: number;
+          resend_attempts: number;
+          window_started_at: string;
+          cooldown_until: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          phone: string;
+          verify_attempts?: number;
+          resend_attempts?: number;
+          window_started_at?: string;
+          cooldown_until?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          verify_attempts?: number;
+          resend_attempts?: number;
+          window_started_at?: string;
+          cooldown_until?: string | null;
+        };
+        Relationships: [];
       };
       listings: {
         Row: {
@@ -53,11 +107,13 @@ export type Database = {
           status?: string;
           price?: number;
         };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
     Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 };
 
@@ -71,3 +127,10 @@ export {
   createSupabaseClient,
   type SupabaseAuthStorage,
 } from "./create-client";
+
+export type {
+  ProfileRow,
+  ProfileUpdate,
+  PhoneRateLimitRow,
+  PhoneRateLimitUpdate,
+} from "./tables";

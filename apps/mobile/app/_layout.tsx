@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { promptBiometricUnlock } from "~/features/auth/biometric";
 import { bootstrapPermissions } from "~/lib/permissions";
 import { supabase } from "~/lib/supabase";
 import {
@@ -31,7 +32,14 @@ export default function RootLayout() {
 
   useEffect(() => {
     void bootstrapPermissions();
-    void supabase.auth.getSession();
+    void (async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        await promptBiometricUnlock();
+      }
+    })();
   }, []);
 
   if (!fontsLoaded) {
@@ -56,6 +64,7 @@ export default function RootLayout() {
           name="(affiliates)"
           options={{ ...modalStackScreenOptions, headerShown: false }}
         />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="listing/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="deal/[id]" options={{ headerShown: false }} />
       </Stack>
