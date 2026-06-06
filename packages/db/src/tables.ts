@@ -11,3 +11,11 @@ export type PaymentInsert = Database["public"]["Tables"]["payments"]["Insert"];
 export type PaymentUpdate = Database["public"]["Tables"]["payments"]["Update"];
 export type WebhookEventRow =
   Database["public"]["Tables"]["webhook_events"]["Row"];
+export type VinLookupRow = Database["public"]["Tables"]["vin_lookups"]["Row"];
+export type VinLookupInsert =
+  Database["public"]["Tables"]["vin_lookups"]["Insert"];
+export type VinLookupUpdate =
+  Database["public"]["Tables"]["vin_lookups"]["Update"];
+export type PhotoRow = Database["public"]["Tables"]["photos"]["Row"];
+export type PhotoInsert = Database["public"]["Tables"]["photos"]["Insert"];
+export type PhotoUpdate = Database["public"]["Tables"]["photos"]["Update"];

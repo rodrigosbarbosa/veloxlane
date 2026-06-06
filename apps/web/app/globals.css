@@ -359,6 +359,308 @@
     background: var(--vl-status-warning-bg);
     color: var(--vl-text-on-dark-muted);
   }
+
+  .vin-sell-page {
+    @apply flex flex-col gap-8;
+  }
+
+  .vin-sell-intro {
+    @apply max-w-2xl space-y-3;
+  }
+
+  .vin-entry-panel {
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-md);
+    background: color-mix(in srgb, var(--vl-surface-canvas) 88%, white 12%);
+    @apply flex max-w-2xl flex-col gap-4 p-5 md:p-6;
+  }
+
+  .vin-entry-label {
+    color: var(--vl-text-on-dark-muted);
+    font-size: var(--vl-font-size-sm);
+    font-weight: var(--vl-font-weight-medium);
+  }
+
+  .vin-entry-input {
+    font-family: var(--vl-font-family-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--vl-border-default);
+    border-radius: var(--vl-radius-sm);
+    background: var(--vl-surface-card);
+    color: var(--vl-text-primary);
+    @apply h-12 px-4 text-lg outline-none;
+  }
+
+  .vin-entry-input:focus-visible {
+    box-shadow: var(--vl-shadow-amber-glow);
+  }
+
+  .vin-entry-helper {
+    color: var(--vl-text-on-dark-muted);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .vin-entry-error {
+    color: var(--vl-status-danger);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .vin-entry-actions {
+    @apply flex flex-col gap-3 sm:flex-row;
+  }
+
+  .vin-entry-loading {
+    color: var(--vl-status-verified);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .vin-scan-video {
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-sm);
+    @apply aspect-video w-full object-cover;
+  }
+
+  .vin-preview-card {
+    border: 1px solid var(--vl-border-on-dark);
+    border-radius: var(--vl-radius-md);
+    background: var(--vl-surface-card);
+    color: var(--vl-text-primary);
+    @apply flex max-w-2xl flex-col gap-6 p-5 md:p-6;
+  }
+
+  .vin-preview-header {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .vin-preview-eyebrow {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-xs);
+    letter-spacing: var(--vl-letter-spacing-wider);
+    text-transform: uppercase;
+  }
+
+  .vin-preview-title {
+    font-size: var(--vl-font-size-2xl);
+    font-style: italic;
+    font-weight: var(--vl-font-weight-semibold);
+    letter-spacing: var(--vl-letter-spacing-tight);
+  }
+
+  .vin-preview-vin {
+    font-family: var(--vl-font-family-mono);
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .vin-trust-badge {
+    background: var(--vl-status-verified-bg);
+    color: var(--vl-status-verified);
+    border-radius: var(--vl-radius-pill);
+    @apply inline-flex items-center gap-2 px-3 py-2 text-sm font-medium;
+  }
+
+  .vin-preview-grid {
+    @apply grid gap-4 sm:grid-cols-3;
+  }
+
+  .vin-preview-stat {
+    border: 1px solid var(--vl-border-subtle);
+    border-radius: var(--vl-radius-sm);
+    @apply space-y-1 p-4;
+  }
+
+  .vin-preview-stat-label {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-xs);
+    letter-spacing: var(--vl-letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .vin-preview-stat-value {
+    font-size: var(--vl-font-size-xl);
+    font-weight: var(--vl-font-weight-semibold);
+  }
+
+  .vin-preview-note {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .vin-preview-warning {
+    color: var(--vl-status-warning);
+  }
+
+  .vin-price-range {
+    @apply space-y-3;
+  }
+
+  .vin-price-range-header {
+    @apply flex items-center justify-between gap-3;
+  }
+
+  .vin-price-range-values {
+    font-weight: var(--vl-font-weight-semibold);
+  }
+
+  .vin-price-range-track {
+    position: relative;
+    height: 0.75rem;
+    border-radius: var(--vl-radius-pill);
+    background: var(--vl-color-asphalt-100);
+    overflow: hidden;
+  }
+
+  .vin-price-range-fill {
+    position: absolute;
+    inset: 0;
+    margin-inline: 18%;
+  }
+
+  .vin-price-range-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.35rem;
+    height: 1.25rem;
+    transform: translate(-50%, -50%);
+    border-radius: var(--vl-radius-pill);
+    background: var(--vl-action-primary-bg);
+  }
+
+  .vin-preview-actions {
+    @apply flex flex-col gap-3 sm:flex-row;
+  }
+
+  .vin-primary-button,
+  .vin-secondary-button {
+    border-radius: var(--vl-radius-sm);
+    font-weight: var(--vl-font-weight-medium);
+    @apply h-11 px-4 text-sm;
+  }
+
+  .vin-primary-button {
+    background: var(--vl-action-primary-bg);
+    color: var(--vl-action-primary-fg);
+  }
+
+  .vin-secondary-button {
+    border: 1px solid var(--vl-border-default);
+    background: transparent;
+    color: var(--vl-text-primary);
+  }
+
+  .vin-preview-footer {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .photo-upload-panel {
+    @apply space-y-6;
+  }
+
+  .photo-upload-header {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between;
+  }
+
+  .photo-upload-progress {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .photo-upload-grid {
+    @apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .photo-slot-card {
+    border: 1px solid var(--vl-border-subtle);
+    border-radius: var(--vl-radius-sm);
+    @apply space-y-3 p-4;
+  }
+
+  .photo-slot-required {
+    border-color: color-mix(
+      in srgb,
+      var(--vl-action-primary-bg) 35%,
+      transparent
+    );
+  }
+
+  .photo-slot-card-header {
+    @apply flex items-start justify-between gap-3;
+  }
+
+  .photo-slot-number {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-xs);
+    letter-spacing: var(--vl-letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .photo-slot-label {
+    font-size: var(--vl-font-size-md);
+    font-weight: var(--vl-font-weight-semibold);
+  }
+
+  .photo-slot-badge {
+    color: var(--vl-action-primary-bg);
+    font-size: var(--vl-font-size-xs);
+    font-weight: var(--vl-font-weight-medium);
+  }
+
+  .photo-slot-dropzone {
+    @apply block cursor-pointer;
+  }
+
+  .photo-slot-empty {
+    border: 1px dashed var(--vl-border-default);
+    border-radius: var(--vl-radius-sm);
+    color: var(--vl-text-secondary);
+    min-height: 10rem;
+    @apply flex flex-col items-center justify-center gap-2 px-4 text-center text-sm;
+  }
+
+  .photo-slot-preview {
+    border-radius: var(--vl-radius-sm);
+    min-height: 10rem;
+    @apply h-40 w-full object-cover;
+  }
+
+  .photo-slot-drag-handle {
+    color: var(--vl-text-secondary);
+    @apply inline-flex items-center justify-center rounded-sm p-2;
+  }
+
+  .photo-slot-delete {
+    color: var(--vl-status-warning);
+    @apply inline-flex items-center gap-2 text-sm;
+  }
+
+  .photo-slot-status,
+  .photo-upload-loading {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .photo-slot-error,
+  .photo-upload-message {
+    color: var(--vl-status-warning);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .photo-slot-warning {
+    color: var(--vl-status-warning);
+    font-size: var(--vl-font-size-xs);
+  }
+
+  .photo-upload-actions {
+    @apply space-y-3;
+  }
+
+  .photo-upload-helper {
+    color: var(--vl-text-secondary);
+    font-size: var(--vl-font-size-sm);
+  }
 }
 
 @layer utilities {

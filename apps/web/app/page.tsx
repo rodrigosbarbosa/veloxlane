@@ -110,8 +110,8 @@ export default async function HomePage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <a className="button-primary" href="#list-flow">
-                Start a seller flow
+              <a className="button-primary" href="/sell/vin">
+                Sell my car
                 <ArrowRight className="h-4 w-4" />
               </a>
               <a className="button-secondary" href="#pricing">

@@ -49,6 +49,13 @@ const config: ExpoConfig = {
     "expo-asset",
     "expo-secure-store",
     "expo-notifications",
+    [
+      "expo-camera",
+      {
+        cameraPermission:
+          "VeloxLane uses your camera to scan the VIN barcode on your door jamb.",
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,

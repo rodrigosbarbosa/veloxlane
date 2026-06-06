@@ -1,5 +1,5 @@
-import { PlaceholderScreen } from "~/components/PlaceholderScreen";
+import { Redirect } from "expo-router";
 
-export default function VinEntryScreen() {
-  return <PlaceholderScreen title="VIN Entry / Scan" />;
+export default function SellTabIndex() {
+  return <Redirect href="/(sell)/vin" />;
 }

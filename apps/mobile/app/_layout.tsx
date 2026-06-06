@@ -64,6 +64,10 @@ export default function RootLayout() {
           name="(affiliates)"
           options={{ ...modalStackScreenOptions, headerShown: false }}
         />
+        <Stack.Screen
+          name="(sell)"
+          options={{ ...modalStackScreenOptions, headerShown: false }}
+        />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="listing/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="deal/[id]" options={{ headerShown: false }} />

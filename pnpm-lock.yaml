@@ -117,12 +117,18 @@ importers:
       '@veloxlane/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas
+      '@veloxlane/vin':
+        specifier: workspace:*
+        version: link:../../packages/vin
       expo:
         specifier: ~51.0.39
         version: 51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0)
       expo-asset:
         specifier: ~10.0.10
         version: 10.0.10(expo@51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0))
+      expo-camera:
+        specifier: ~15.0.16
+        version: 15.0.16(expo@51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0))
       expo-font:
         specifier: ~12.0.10
         version: 12.0.10(expo@51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0))
@@ -235,6 +241,9 @@ importers:
       '@veloxlane/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@veloxlane/vin':
+        specifier: workspace:*
+        version: link:../../packages/vin
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -426,6 +435,28 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
+
+  packages/vin:
+    dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.47.10
+        version: 2.107.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@veloxlane/config':
+        specifier: workspace:*
+        version: link:../config
+      '@vitest/coverage-v8':
+        specifier: ^2.1.8
+        version: 2.1.9(vitest@2.1.9(@types/node@20.19.41)(lightningcss@1.27.0)(msw@2.14.6(@types/node@20.19.41)(typescript@5.9.3))(terser@5.48.0))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@20.19.41)(lightningcss@1.27.0)(msw@2.14.6(@types/node@20.19.41)(typescript@5.9.3))(terser@5.48.0)
 
 packages:
 
@@ -3467,6 +3498,11 @@ packages:
 
   expo-asset@10.0.10:
     resolution: {integrity: sha512-0qoTIihB79k+wGus9wy0JMKq7DdenziVx3iUkGvMAy2azscSgWH6bd2gJ9CGnhC6JRd3qTMFBL0ou/fx7WZl7A==}
+    peerDependencies:
+      expo: '*'
+
+  expo-camera@15.0.16:
+    resolution: {integrity: sha512-FLE02DMqkjwsb7IugKAqQvBe6s+TCQeb5LupO1+r//wAhBwmHncOrc6zV95ZEC2f9PTPK34nFH/s8CDGiVzIAA==}
     peerDependencies:
       expo: '*'
 
@@ -10356,6 +10392,11 @@ snapshots:
       md5-file: 3.2.3
     transitivePeerDependencies:
       - supports-color
+
+  expo-camera@15.0.16(expo@51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0)):
+    dependencies:
+      expo: 51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0)
+      invariant: 2.2.4
 
   expo-constants@16.0.2(expo@51.0.39(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(react-native@0.74.5(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.3.29)(react@18.2.0))(react@18.2.0)):
     dependencies:

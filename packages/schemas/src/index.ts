@@ -3,6 +3,7 @@ import { z } from "zod";
 export * from "./auth";
 export * from "./payments";
 export * from "./phone";
+export * from "./photos";
 
 export const appEnvSchema = z.enum(["local", "staging", "production"]);
 

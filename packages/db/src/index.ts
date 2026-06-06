@@ -92,20 +92,102 @@ export type Database = {
         Row: {
           id: string;
           seller_id: string;
-          status: string;
+          vin: string;
+          make: string;
+          model: string;
+          year: number;
+          mileage: number;
           price: number;
+          description: string | null;
+          status: string;
+          carfax_data: Json | null;
+          escrow_fee_mode: string | null;
+          location: string;
+          state: string;
+          photos_count: number;
+          published_at: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
           seller_id: string;
+          vin: string;
+          make: string;
+          model: string;
+          year: number;
+          mileage?: number;
+          price?: number;
+          description?: string | null;
           status?: string;
-          price: number;
+          carfax_data?: Json | null;
+          escrow_fee_mode?: string | null;
+          location: string;
+          state: string;
+          photos_count?: number;
+          published_at?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
-          status?: string;
+          vin?: string;
+          make?: string;
+          model?: string;
+          year?: number;
+          mileage?: number;
           price?: number;
+          description?: string | null;
+          status?: string;
+          carfax_data?: Json | null;
+          escrow_fee_mode?: string | null;
+          location?: string;
+          state?: string;
+          photos_count?: number;
+          published_at?: string | null;
+        };
+        Relationships: [];
+      };
+      photos: {
+        Row: {
+          id: string;
+          listing_id: string;
+          storage_path: string | null;
+          processed_path: string | null;
+          plate_detected: boolean;
+          plate_bbox: Json | null;
+          plate_cover_status: string;
+          angle_slot: number | null;
+          ai_quality_score: number | null;
+          approved: boolean;
+          source: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          storage_path?: string | null;
+          processed_path?: string | null;
+          plate_detected?: boolean;
+          plate_bbox?: Json | null;
+          plate_cover_status?: string;
+          angle_slot?: number | null;
+          ai_quality_score?: number | null;
+          approved?: boolean;
+          source?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          storage_path?: string | null;
+          processed_path?: string | null;
+          plate_detected?: boolean;
+          plate_bbox?: Json | null;
+          plate_cover_status?: string;
+          angle_slot?: number | null;
+          ai_quality_score?: number | null;
+          approved?: boolean;
+          source?: string;
         };
         Relationships: [];
       };
@@ -141,6 +223,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      vin_lookups: {
+        Row: {
+          vin: string;
+          carfax_data: Json | null;
+          carfax_fetched_at: string | null;
+          marketcheck_data: Json | null;
+          marketcheck_fetched_at: string | null;
+          nhtsa_recalls: Json | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          vin: string;
+          carfax_data?: Json | null;
+          carfax_fetched_at?: string | null;
+          marketcheck_data?: Json | null;
+          marketcheck_fetched_at?: string | null;
+          nhtsa_recalls?: Json | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          carfax_data?: Json | null;
+          carfax_fetched_at?: string | null;
+          marketcheck_data?: Json | null;
+          marketcheck_fetched_at?: string | null;
+          nhtsa_recalls?: Json | null;
+        };
+        Relationships: [];
+      };
       webhook_events: {
         Row: {
           id: string;
@@ -170,6 +282,7 @@ export type Tables<T extends keyof Database["public"]["Tables"]> =
   Database["public"]["Tables"][T]["Row"];
 
 export const listingTable = "listings" as const;
+export const photosTable = "photos" as const;
 export const paymentsTable = "payments" as const;
 export const profilesTable = "profiles" as const;
 export const webhookEventsTable = "webhook_events" as const;
@@ -181,6 +294,9 @@ export {
 
 export type {
   PaymentInsert,
+  PhotoInsert,
+  PhotoRow,
+  PhotoUpdate,
   PaymentRow,
   PaymentUpdate,
   PhoneRateLimitRow,
