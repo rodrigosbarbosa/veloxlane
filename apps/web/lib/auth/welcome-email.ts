@@ -1,5 +1,7 @@
 import { copy, tagline } from "@veloxlane/brand/copy";
 
+import { createResendClient, getResendConfig } from "@/lib/email/resend";
+
 type WelcomeEmailInput = {
   email: string;
   fullName: string;
@@ -39,24 +41,18 @@ export function buildWelcomeEmailHtml({ fullName }: WelcomeEmailInput): string {
 export async function sendWelcomeEmail(
   input: WelcomeEmailInput,
 ): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL;
+  const config = getResendConfig();
 
-  if (!apiKey || !from) {
+  if (!config) {
     return;
   }
 
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: input.email,
-      subject: `Welcome to ${copy.productName}`,
-      html: buildWelcomeEmailHtml(input),
-    }),
+  const resend = createResendClient(config);
+
+  await resend.emails.send({
+    from: config.fromEmail,
+    to: input.email,
+    subject: `Welcome to ${copy.productName}`,
+    html: buildWelcomeEmailHtml(input),
   });
 }
