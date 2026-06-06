@@ -1,0 +1,18 @@
+---
+description: VeloxLane brand tokens (apply to UI work)
+globs:
+  - "apps/web/**"
+  - "apps/admin/**"
+  - "apps/mobile/**"
+  - "packages/ui/**"
+  - "packages/brand/**"
+alwaysApply: false
+---
+- Colors: Midnight #0A1628 (canvas/trust), Amber #E8A03D (ACCENTS ONLY — CTAs,
+  the X, lane stripes, verified/escrow signals; never body text or full bg),
+  Cream #F8F6F1 (backgrounds), Asphalt #3D4550 (secondary text),
+  Signal Teal #2DBFA6 (verified/protected/escrow indicators).
+- Type: Inter 600 italic, letter-spacing -0.03em for display; Inter 400 body.
+- Voice: direct, warm, confident, specific. Tagline anchor: "Skip the lot. Take the lane."
+- UX: one primary action per screen; trust badges visible; thumb-zone CTAs on mobile;
+  errors are plain-language and recoverable, never raw codes.
