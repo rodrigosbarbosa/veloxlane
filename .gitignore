@@ -13,6 +13,7 @@ coverage/
 # env / secrets
 .env
 .env.*
+.env.local
 !.env.example
 *.pem
 *.key
@@ -38,4 +39,3 @@ ios/
 
 # generated
 *.tsbuildinfo
-apps/api/prisma/migrations/

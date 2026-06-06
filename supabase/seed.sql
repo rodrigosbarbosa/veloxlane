@@ -1,0 +1,1 @@
+-- Dev seed data for local Supabase. Applied after migrations in local dev.

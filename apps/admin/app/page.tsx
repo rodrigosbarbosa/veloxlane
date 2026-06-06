@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   UserRoundCheck,
 } from "lucide-react";
-import { MetricTile, StatusPill, SurfacePanel } from "@veloxlane/ui-web";
+import { MetricTile, StatusPill, SurfacePanel } from "@veloxlane/ui";
 
 import {
   canViewArea,

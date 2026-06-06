@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@veloxlane/design-tokens", "@veloxlane/ui-web"],
+  transpilePackages: ["@veloxlane/brand", "@veloxlane/ui"],
 };
 
 export default nextConfig;

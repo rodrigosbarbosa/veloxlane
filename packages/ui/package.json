@@ -1,0 +1,33 @@
+{
+  "name": "@veloxlane/ui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared VeloxLane component library (shadcn/ui + brand primitives)",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint src --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@veloxlane/config": "workspace:*",
+    "react": "^18.3.1",
+    "typescript": "^5.7.2"
+  }
+}

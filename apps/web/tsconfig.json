@@ -1,18 +1,18 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "@veloxlane/config/tsconfig/nextjs.json",
   "compilerOptions": {
-    "noEmit": true,
-    "jsx": "preserve",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "types": ["node", "vitest/globals"],
-    "allowJs": true,
-    "isolatedModules": true,
-    "incremental": true
+    "isolatedModules": true
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -9,7 +9,7 @@ import {
   UserRoundCheck,
 } from "lucide-react";
 
-import { getApiHealthSummary } from "../lib/api-health";
+import { getEdgeHealthSummary } from "../lib/api-health";
 
 const highlights = [
   "Private-party car marketplace",
@@ -61,7 +61,7 @@ const valueCards = [
 ];
 
 const healthToneClassName: Record<
-  Awaited<ReturnType<typeof getApiHealthSummary>>["state"],
+  Awaited<ReturnType<typeof getEdgeHealthSummary>>["state"],
   string
 > = {
   configured: "status-chip status-chip-configured",
@@ -70,7 +70,7 @@ const healthToneClassName: Record<
 };
 
 export default async function HomePage() {
-  const apiHealth = await getApiHealthSummary();
+  const apiHealth = await getEdgeHealthSummary();
 
   return (
     <main className="page-shell">

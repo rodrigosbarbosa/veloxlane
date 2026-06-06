@@ -7,8 +7,8 @@ import {
   radius,
   spacing,
   typography,
-} from "@veloxlane/design-tokens";
-import type { TypeStyle } from "@veloxlane/design-tokens";
+} from "@veloxlane/brand";
+import type { TypeStyle } from "@veloxlane/brand";
 
 const mobileFontFamily = {
   regular: "Inter_400Regular",

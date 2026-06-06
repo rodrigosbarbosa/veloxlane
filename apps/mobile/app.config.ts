@@ -1,5 +1,7 @@
 import type { ExpoConfig } from "expo/config";
-import { colors } from "@veloxlane/design-tokens";
+
+/** Velox Midnight — keep in sync with @veloxlane/brand `colors.surface.canvas`. */
+const SPLASH_BACKGROUND = "#0A1628";
 
 const config: ExpoConfig = {
   name: "VeloxLane",
@@ -9,7 +11,7 @@ const config: ExpoConfig = {
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   splash: {
-    backgroundColor: colors.surface.canvas,
+    backgroundColor: SPLASH_BACKGROUND,
     resizeMode: "contain",
   },
   ios: {
@@ -19,7 +21,7 @@ const config: ExpoConfig = {
   android: {
     package: "com.veloxlane.mobile",
     adaptiveIcon: {
-      backgroundColor: colors.surface.canvas,
+      backgroundColor: SPLASH_BACKGROUND,
     },
   },
   web: {

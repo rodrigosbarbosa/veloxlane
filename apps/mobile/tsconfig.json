@@ -3,6 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
@@ -13,6 +14,7 @@
     "src",
     "app.config.ts",
     "expo-env.d.ts",
+    "nativewind-env.d.ts",
     ".expo/types/**/*.ts"
   ]
 }

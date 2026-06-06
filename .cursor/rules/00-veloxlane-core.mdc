@@ -1,0 +1,24 @@
+---
+description: VeloxLane non-negotiable invariants
+alwaysApply: true
+---
+# VeloxLane — invariants (never violate)
+- MONEY: VeloxLane NEVER holds vehicle purchase funds. All car-sale money routes
+  through Escrow.com. The platform's Stripe account handles ONLY platform fees
+  (listing $12, unlock $6, featured upgrades). Never build a flow that takes
+  custody of sale proceeds — it would trigger money-transmitter licensing.
+- SECRETS: Only vars prefixed NEXT_PUBLIC_ / EXPO_PUBLIC_ may reach client code.
+  Never place a service-role key, secret key, webhook secret, or AWS credential
+  behind those prefixes. Server-only secrets live in API routes + Edge Functions.
+- DATABASE: Row Level Security is ON for every table, no exceptions. unlocks,
+  offers, escrow_transactions are insert-via-webhook-only — never client-writable.
+- PLATE PRIVACY: Real license plates are NEVER served to buyers. Public reads
+  return processed_path (branded plate cover) only; original storage_path is
+  private (admin/owner only). If plate detection misses, fail safe to a blur.
+- NO DEALERS: Dealers are blocked. Never add a feature that eases bulk/dealer
+  listing or weakens dealer detection (risk score, registry lookup, volume caps).
+- SCOPE: Phase 1 launches Florida + Texas ONLY. Do not add other-state logic until
+  the relevant prompt asks for it.
+- TS: TypeScript strict mode. No `any` in app code.
+- REVIEW: Any change to money, escrow, webhooks, auth, RLS, or the bill of sale
+  must ship with tests and be flagged for a Plan-track review pass before merge.
