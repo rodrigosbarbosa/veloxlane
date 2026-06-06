@@ -14,7 +14,7 @@ import { Pressable, Text, TextInput, View } from "react-native";
 import { AuthScreen } from "~/components/AuthScreen";
 import { PrimaryButton } from "~/components/PrimaryButton";
 import { supabase } from "~/lib/supabase";
-import { mobileTheme, textStyle } from "~/theme/mobileTheme";
+import { mobileTheme, authFieldStyles, textStyle } from "~/theme/mobileTheme";
 
 export default function SignUpScreen() {
   const router = useRouter();
@@ -79,8 +79,8 @@ export default function SignUpScreen() {
         <TextInput
           accessibilityLabel={copy.auth.fullNameLabel}
           placeholder={copy.auth.fullNameLabel}
-          placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
-          style={inputStyle}
+          placeholderTextColor={authFieldStyles.placeholderColor}
+          style={authFieldStyles.input}
           onChangeText={(text) => setValue("fullName", text)}
         />
         <TextInput
@@ -88,24 +88,24 @@ export default function SignUpScreen() {
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder={copy.auth.emailLabel}
-          placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
-          style={inputStyle}
+          placeholderTextColor={authFieldStyles.placeholderColor}
+          style={authFieldStyles.input}
           onChangeText={(text) => setValue("email", text)}
         />
         <TextInput
           accessibilityLabel={copy.auth.passwordLabel}
           placeholder={copy.auth.passwordLabel}
-          placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
+          placeholderTextColor={authFieldStyles.placeholderColor}
           secureTextEntry
-          style={inputStyle}
+          style={authFieldStyles.input}
           onChangeText={(text) => setValue("password", text)}
         />
         <TextInput
           accessibilityLabel={copy.auth.confirmPasswordLabel}
           placeholder={copy.auth.confirmPasswordLabel}
-          placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
+          placeholderTextColor={authFieldStyles.placeholderColor}
           secureTextEntry
-          style={inputStyle}
+          style={authFieldStyles.input}
           onChangeText={(text) => setValue("confirmPassword", text)}
         />
         <View style={{ flexDirection: "row", gap: mobileTheme.spacing[4] }}>
@@ -116,7 +116,7 @@ export default function SignUpScreen() {
                   color:
                     role === value
                       ? mobileTheme.colors.action.primaryBg
-                      : mobileTheme.colors.text.onDarkMuted,
+                      : authFieldStyles.helperText.color,
                 }}
               >
                 {value === "buyer" ? copy.auth.roleBuyer : copy.auth.roleSeller}
@@ -125,12 +125,12 @@ export default function SignUpScreen() {
           ))}
         </View>
         {message ? (
-          <Text style={{ color: mobileTheme.colors.action.primaryBg }}>
-            {message}
-          </Text>
+          <Text style={authFieldStyles.messageError}>{message}</Text>
         ) : null}
         {errors.fullName?.message ? (
-          <Text style={errorStyle}>{errors.fullName.message}</Text>
+          <Text style={authFieldStyles.errorText}>
+            {errors.fullName.message}
+          </Text>
         ) : null}
         <PrimaryButton
           disabled={isSubmitting}
@@ -138,12 +138,7 @@ export default function SignUpScreen() {
           onPress={() => void onSubmit()}
         />
         <Link href="/login">
-          <Text
-            style={[
-              textStyle("body"),
-              { color: mobileTheme.colors.action.primaryBg },
-            ]}
-          >
+          <Text style={[textStyle("body"), authFieldStyles.linkText]}>
             {copy.auth.backToLogin}
           </Text>
         </Link>
@@ -151,16 +146,3 @@ export default function SignUpScreen() {
     </AuthScreen>
   );
 }
-
-const inputStyle = {
-  borderColor: mobileTheme.colors.border.onDark,
-  borderWidth: 1,
-  borderRadius: mobileTheme.radius.md,
-  color: mobileTheme.colors.text.onDark,
-  height: 44,
-  paddingHorizontal: mobileTheme.spacing[4],
-};
-
-const errorStyle = {
-  color: mobileTheme.colors.action.primaryBg,
-};

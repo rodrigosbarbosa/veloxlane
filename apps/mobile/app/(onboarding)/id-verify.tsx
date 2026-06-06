@@ -7,7 +7,7 @@ import { Linking, Text, View } from "react-native";
 import { AuthScreen } from "~/components/AuthScreen";
 import { PrimaryButton } from "~/components/PrimaryButton";
 import { supabase } from "~/lib/supabase";
-import { mobileTheme } from "~/theme/mobileTheme";
+import { authFieldStyles, mobileTheme } from "~/theme/mobileTheme";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -79,12 +79,10 @@ export default function IdVerifyScreen() {
     >
       <View style={{ gap: mobileTheme.spacing[4] }}>
         {message ? (
-          <Text style={{ color: mobileTheme.colors.action.primaryBg }}>
-            {message}
-          </Text>
+          <Text style={authFieldStyles.messageError}>{message}</Text>
         ) : null}
         {profile.manualReview ? (
-          <Text style={{ color: mobileTheme.colors.text.onDarkMuted }}>
+          <Text style={authFieldStyles.helperText}>
             {copy.auth.identityManualReviewNote}
           </Text>
         ) : (

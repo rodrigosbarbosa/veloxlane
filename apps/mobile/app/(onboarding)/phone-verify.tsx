@@ -1,7 +1,4 @@
-import {
-  advanceOnboardingStep,
-  getPostAuthRedirect,
-} from "@veloxlane/auth";
+import { advanceOnboardingStep, getPostAuthRedirect } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -10,7 +7,7 @@ import { Text, TextInput, View } from "react-native";
 import { AuthScreen } from "~/components/AuthScreen";
 import { PrimaryButton } from "~/components/PrimaryButton";
 import { supabase } from "~/lib/supabase";
-import { mobileTheme } from "~/theme/mobileTheme";
+import { mobileTheme, authFieldStyles } from "~/theme/mobileTheme";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3001";
 
@@ -109,8 +106,8 @@ export default function PhoneVerifyScreen() {
             accessibilityLabel={copy.auth.phoneLabel}
             keyboardType="phone-pad"
             placeholder={copy.auth.phoneLabel}
-            placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
-            style={inputStyle}
+            placeholderTextColor={authFieldStyles.placeholderColor}
+            style={authFieldStyles.input}
             value={phone}
             onChangeText={setPhone}
           />
@@ -120,16 +117,14 @@ export default function PhoneVerifyScreen() {
             keyboardType="number-pad"
             maxLength={6}
             placeholder={copy.auth.otpLabel}
-            placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
-            style={inputStyle}
+            placeholderTextColor={authFieldStyles.placeholderColor}
+            style={authFieldStyles.input}
             value={token}
             onChangeText={setToken}
           />
         )}
         {message ? (
-          <Text style={{ color: mobileTheme.colors.action.primaryBg }}>
-            {message}
-          </Text>
+          <Text style={authFieldStyles.messageError}>{message}</Text>
         ) : null}
         <PrimaryButton
           disabled={loading}
@@ -146,12 +141,3 @@ export default function PhoneVerifyScreen() {
     </AuthScreen>
   );
 }
-
-const inputStyle = {
-  borderColor: mobileTheme.colors.border.onDark,
-  borderWidth: 1,
-  borderRadius: mobileTheme.radius.md,
-  color: mobileTheme.colors.text.onDark,
-  height: 44,
-  paddingHorizontal: mobileTheme.spacing[4],
-};

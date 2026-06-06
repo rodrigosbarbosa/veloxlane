@@ -19,7 +19,7 @@ import {
   setBiometricEnabled,
 } from "~/features/auth/biometric";
 import { supabase } from "~/lib/supabase";
-import { mobileTheme } from "~/theme/mobileTheme";
+import { authFieldStyles, mobileTheme } from "~/theme/mobileTheme";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -98,22 +98,20 @@ export default function LoginScreen() {
           autoCapitalize="none"
           keyboardType="email-address"
           placeholder={copy.auth.emailLabel}
-          placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
-          style={inputStyle}
+          placeholderTextColor={authFieldStyles.placeholderColor}
+          style={authFieldStyles.input}
           onChangeText={(text) => setValue("email", text)}
         />
         <TextInput
           accessibilityLabel={copy.auth.passwordLabel}
           placeholder={copy.auth.passwordLabel}
-          placeholderTextColor={mobileTheme.colors.text.onDarkMuted}
+          placeholderTextColor={authFieldStyles.placeholderColor}
           secureTextEntry
-          style={inputStyle}
+          style={authFieldStyles.input}
           onChangeText={(text) => setValue("password", text)}
         />
         {message ? (
-          <Text style={{ color: mobileTheme.colors.action.primaryBg }}>
-            {message}
-          </Text>
+          <Text style={authFieldStyles.messageError}>{message}</Text>
         ) : null}
         <PrimaryButton
           disabled={isSubmitting}
@@ -124,12 +122,3 @@ export default function LoginScreen() {
     </AuthScreen>
   );
 }
-
-const inputStyle = {
-  borderColor: mobileTheme.colors.border.onDark,
-  borderWidth: 1,
-  borderRadius: mobileTheme.radius.md,
-  color: mobileTheme.colors.text.onDark,
-  height: 44,
-  paddingHorizontal: mobileTheme.spacing[4],
-};

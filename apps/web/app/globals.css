@@ -297,6 +297,68 @@
     background: var(--vl-status-danger-bg);
     color: var(--vl-status-danger);
   }
+
+  .auth-field-label {
+    color: var(--vl-text-on-dark-muted);
+    font-weight: var(--vl-font-weight-medium);
+  }
+
+  .auth-field-input {
+    height: 2.75rem;
+    border: 1px solid var(--vl-border-default);
+    border-radius: var(--vl-radius-sm);
+    background: var(--vl-surface-card);
+    padding-inline: var(--vl-space-4);
+    color: var(--vl-text-primary);
+    outline: none;
+    transition: var(--vl-transition-hover);
+  }
+
+  .auth-field-input::placeholder {
+    color: var(--vl-text-muted);
+  }
+
+  .auth-field-input:focus-visible {
+    box-shadow: var(--vl-shadow-amber-glow);
+  }
+
+  .auth-field-error {
+    color: var(--vl-status-danger);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .auth-helper-text {
+    color: var(--vl-text-on-dark-muted);
+    font-size: var(--vl-font-size-sm);
+  }
+
+  .auth-inline-link {
+    color: var(--vl-text-on-dark-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .auth-inline-link:hover {
+    color: var(--vl-text-on-dark);
+  }
+
+  .auth-status-error {
+    border-color: var(--vl-border-strong);
+    background: var(--vl-surface-card-dark);
+    color: var(--vl-text-on-dark-muted);
+  }
+
+  .auth-status-success {
+    border-color: var(--vl-status-verified);
+    background: var(--vl-status-verified-bg);
+    color: var(--vl-text-on-dark-muted);
+  }
+
+  .auth-status-info {
+    border-color: var(--vl-status-warning);
+    background: var(--vl-status-warning-bg);
+    color: var(--vl-text-on-dark-muted);
+  }
 }
 
 @layer utilities {

@@ -94,3 +94,24 @@ export const mobileTheme = {
 } as const;
 
 export type MobileTheme = typeof mobileTheme;
+
+export const authFieldStyles = {
+  input: {
+    backgroundColor: colors.surface.card,
+    borderColor: colors.border.default,
+    borderWidth: 1,
+    borderRadius: radius.md,
+    color: colors.text.primary,
+    height: 44,
+    paddingHorizontal: spacing[4],
+  } satisfies ViewStyle,
+  placeholderColor: colors.text.muted,
+  errorText: { color: colors.status.danger },
+  helperText: { color: colors.text.onDarkMuted },
+  linkText: {
+    color: colors.text.onDarkMuted,
+    textDecorationLine: "underline" as const,
+  },
+  messageError: { color: colors.status.danger },
+  messageSuccess: { color: colors.text.onDarkMuted },
+} as const;

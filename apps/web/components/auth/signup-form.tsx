@@ -136,13 +136,15 @@ export function SignupForm() {
         {...register("confirmPassword")}
       />
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">{copy.auth.roleLabel}</legend>
+        <legend className="auth-field-label text-sm">
+          {copy.auth.roleLabel}
+        </legend>
         <div className="flex gap-3">
-          <label className="flex items-center gap-2 text-sm">
+          <label className="auth-helper-text flex items-center gap-2">
             <input type="radio" value="buyer" {...register("role")} />
             {copy.auth.roleBuyer}
           </label>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="auth-helper-text flex items-center gap-2">
             <input type="radio" value="seller" {...register("role")} />
             {copy.auth.roleSeller}
           </label>
@@ -154,11 +156,8 @@ export function SignupForm() {
       <Button disabled={isSubmitting} type="submit">
         {isSubmitting ? copy.auth.loading : copy.auth.submitSignup}
       </Button>
-      <p className="text-sm text-[#A7AEB9]">
-        <Link
-          className="text-[#F8F6F1] underline underline-offset-2"
-          href="/login"
-        >
+      <p className="auth-helper-text">
+        <Link className="auth-inline-link" href="/login">
           {copy.auth.backToLogin}
         </Link>
       </p>

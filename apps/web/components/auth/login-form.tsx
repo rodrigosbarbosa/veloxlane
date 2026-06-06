@@ -138,11 +138,8 @@ export function LoginForm() {
       >
         {copy.auth.googleCta}
       </Button>
-      <p className="text-sm text-[#A7AEB9]">
-        <Link
-          className="text-[#F8F6F1] underline underline-offset-2"
-          href="/forgot"
-        >
+      <p className="auth-helper-text">
+        <Link className="auth-inline-link" href="/forgot">
           {copy.auth.forgotPassword}
         </Link>
       </p>

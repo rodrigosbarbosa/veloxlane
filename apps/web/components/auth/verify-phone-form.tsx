@@ -243,7 +243,7 @@ export function VerifyPhoneForm() {
           <StatusMessage message={status.message} tone={status.tone} />
         ) : null}
         {retrySeconds !== null ? (
-          <p className="text-sm text-[#A7AEB9]" role="status">
+          <p className="auth-helper-text" role="status">
             {copy.auth.retryWaitPrefix} {formatRetryCountdown(retrySeconds)}
           </p>
         ) : null}
@@ -274,7 +274,7 @@ export function VerifyPhoneForm() {
         <StatusMessage message={status.message} tone={status.tone} />
       ) : null}
       {retrySeconds !== null ? (
-        <p className="text-sm text-[#A7AEB9]" role="status">
+        <p className="auth-helper-text" role="status">
           {copy.auth.retryWaitPrefix} {formatRetryCountdown(retrySeconds)}
         </p>
       ) : null}
