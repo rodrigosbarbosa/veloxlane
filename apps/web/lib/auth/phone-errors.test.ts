@@ -102,4 +102,36 @@ describe("mapPhoneAuthMessage", () => {
       hint: expect.stringContaining("Twilio Verify"),
     });
   });
+
+  it("extracts Twilio 60200 diagnostics for server logs", () => {
+    expect(
+      parsePhoneSendFailureDetails({
+        message:
+          "Error sending phone_change OTP to provider: Invalid parameter More information: https://www.twilio.com/docs/errors/60200",
+        code: "sms_send_failed",
+      }),
+    ).toEqual({
+      supabaseCode: "sms_send_failed",
+      supabaseMessage:
+        "Error sending phone_change OTP to provider: Invalid parameter More information: https://www.twilio.com/docs/errors/60200",
+      twilioErrorCode: "60200",
+      hint: expect.stringContaining("60200"),
+    });
+  });
+
+  it("extracts Twilio 30034 A2P 10DLC diagnostics for server logs", () => {
+    expect(
+      parsePhoneSendFailureDetails({
+        message:
+          "Error sending phone_change OTP to provider: US A2P 10DLC - Message from an Unregistered Number More information: https://www.twilio.com/docs/errors/30034",
+        code: "sms_send_failed",
+      }),
+    ).toEqual({
+      supabaseCode: "sms_send_failed",
+      supabaseMessage:
+        "Error sending phone_change OTP to provider: US A2P 10DLC - Message from an Unregistered Number More information: https://www.twilio.com/docs/errors/30034",
+      twilioErrorCode: "30034",
+      hint: expect.stringContaining("Twilio Verify"),
+    });
+  });
 });

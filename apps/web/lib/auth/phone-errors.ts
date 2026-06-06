@@ -79,6 +79,15 @@ export function parsePhoneSendFailureDetails(
   } else if (twilioErrorCode === "21212") {
     hint =
       "Twilio rejected the Verify Service SID (21212). In Supabase Dashboard > Auth > Phone, pick Twilio Verify and paste the VA... Service SID from the same Twilio account as the Account SID — not a phone number or Messaging Service SID.";
+  } else if (twilioErrorCode === "60200") {
+    hint =
+      "Twilio Verify rejected a parameter (60200). In Supabase Dashboard > Auth > Phone, confirm provider is Twilio Verify, Verify Service SID is VA... (not AC... or MG...), Auth Token matches that account, and the destination number is E.164 (+1...).";
+  } else if (twilioErrorCode === "30034") {
+    hint =
+      "Twilio blocked SMS for A2P 10DLC (30034). Plain Twilio Messaging is still configured — switch Supabase Auth > Phone provider to Twilio Verify (VA SID), or complete 10DLC registration for your Messaging Service.";
+  } else if (twilioErrorCode === "21608") {
+    hint =
+      "Twilio trial account blocks unverified recipients (21608). In Twilio Console > Phone Numbers > Verified Caller IDs, add the test number, or upgrade the account.";
   } else if (isSmsProviderFailure(normalized, error.code)) {
     hint =
       "SMS provider failed to deliver the phone_change OTP. Check Supabase Auth phone provider settings.";
