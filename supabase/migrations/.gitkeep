@@ -1,2 +1,0 @@
--- VeloxLane schema migrations live here.
--- Run: supabase db push (local) or apply via Supabase dashboard in hosted envs.
