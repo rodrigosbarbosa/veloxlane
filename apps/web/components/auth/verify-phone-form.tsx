@@ -54,16 +54,27 @@ export function VerifyPhoneForm() {
     const saved = readVerifyPhoneStorage();
     if (saved) {
       otpForm.setValue("phone", saved.phone);
+      phoneForm.setValue("phone", saved.phone);
       setStep("otp");
     }
     setHydrated(true);
-  }, [otpForm]);
+  }, [otpForm, phoneForm]);
 
   useEffect(() => {
     if (step === "phone") {
       otpForm.clearErrors("token");
+      setStatus(null);
     }
   }, [step, otpForm]);
+
+  const returnToPhoneStep = () => {
+    clearVerifyPhoneStorage();
+    otpForm.reset({ phone: phoneForm.getValues("phone"), token: "" });
+    otpForm.clearErrors("token");
+    setStatus(null);
+    setRetrySeconds(null);
+    setStep("phone");
+  };
 
   useEffect(() => {
     if (retrySeconds === null || retrySeconds <= 0) {
@@ -118,6 +129,7 @@ export function VerifyPhoneForm() {
         return;
       }
 
+      clearVerifyPhoneStorage();
       setStatus({
         tone: "error",
         message: payload.message ?? copy.auth.errorGeneric,
@@ -319,6 +331,9 @@ export function VerifyPhoneForm() {
         onClick={() => void resendCode()}
       >
         {copy.auth.resendCode}
+      </Button>
+      <Button type="button" variant="ghost" onClick={returnToPhoneStep}>
+        {copy.auth.changePhoneNumber}
       </Button>
     </form>
   );

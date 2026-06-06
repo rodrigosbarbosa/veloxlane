@@ -30,4 +30,17 @@ describe("mapPhoneAuthMessage", () => {
       copy.auth.errorPhoneTaken,
     );
   });
+
+  it("maps Twilio provider auth failures on send, not OTP mismatch", () => {
+    expect(
+      mapPhoneAuthMessage(
+        {
+          message:
+            "Error sending phone_change OTP to provider: Authenticate More information: https://www.twilio.com/docs/errors/20003",
+          code: "sms_send_failed",
+        },
+        "send",
+      ),
+    ).toBe(copy.auth.errorPhoneSendFailed);
+  });
 });

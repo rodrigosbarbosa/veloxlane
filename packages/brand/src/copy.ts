@@ -42,6 +42,7 @@ export const copy = {
     submitOtp: "Verify code",
     submitIdentity: "Start ID verification",
     resendCode: "Resend code",
+    changePhoneNumber: "Use a different number",
     successCodeSent: "Code on its way — check your texts.",
     errorInvalidOtp: "That code does not match. Try again or resend a new one.",
     retryWaitPrefix: "Try again in",

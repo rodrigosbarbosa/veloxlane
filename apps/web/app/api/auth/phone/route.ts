@@ -74,8 +74,19 @@ export async function POST(request: Request) {
 
     const { error } = await supabase.auth.updateUser({ phone: normalized });
     if (error) {
+      console.error("[auth/phone] updateUser failed", {
+        action: parsed.data.action,
+        code: error.code,
+        message: error.message,
+        userId: user.id,
+      });
       return NextResponse.json(
-        { message: mapPhoneAuthMessage(error.message, parsed.data.action) },
+        {
+          message: mapPhoneAuthMessage(
+            { message: error.message, code: error.code },
+            parsed.data.action,
+          ),
+        },
         { status: 400 },
       );
     }
@@ -104,8 +115,18 @@ export async function POST(request: Request) {
 
   if (error) {
     await markOtpFailed(normalized);
+    console.error("[auth/phone] verifyOtp failed", {
+      code: error.code,
+      message: error.message,
+      userId: user.id,
+    });
     return NextResponse.json(
-      { message: mapPhoneAuthMessage(error.message, "verify") },
+      {
+        message: mapPhoneAuthMessage(
+          { message: error.message, code: error.code },
+          "verify",
+        ),
+      },
       { status: 400 },
     );
   }
