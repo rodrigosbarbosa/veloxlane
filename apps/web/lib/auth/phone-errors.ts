@@ -1,10 +1,19 @@
 import { mapSupabaseAuthError } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
 
-export function mapPhoneAuthMessage(message: string): string {
+export type PhoneAuthAction = "send" | "resend" | "verify";
+
+export function mapPhoneAuthMessage(
+  message: string,
+  action: PhoneAuthAction,
+): string {
+  const normalized = message.toLowerCase();
   const code = mapSupabaseAuthError(message);
 
-  if (code === "phone_taken") {
+  if (
+    code === "phone_taken" ||
+    (normalized.includes("phone") && normalized.includes("already"))
+  ) {
     return copy.auth.errorPhoneTaken;
   }
 
@@ -12,15 +21,25 @@ export function mapPhoneAuthMessage(message: string): string {
     return copy.auth.errorRateLimited;
   }
 
-  const normalized = message.toLowerCase();
-  if (
-    normalized.includes("otp") ||
-    normalized.includes("token") ||
-    normalized.includes("code") ||
-    normalized.includes("expired")
-  ) {
-    return copy.auth.errorInvalidOtp;
+  if (action === "verify") {
+    if (
+      normalized.includes("otp") ||
+      normalized.includes("token") ||
+      (normalized.includes("invalid") && normalized.includes("code")) ||
+      normalized.includes("expired")
+    ) {
+      return copy.auth.errorInvalidOtp;
+    }
+
+    return copy.auth.errorGeneric;
   }
 
-  return copy.auth.errorGeneric;
+  if (
+    normalized.includes("invalid") &&
+    (normalized.includes("phone") || normalized.includes("number"))
+  ) {
+    return "Enter a valid US phone number.";
+  }
+
+  return copy.auth.errorPhoneSendFailed;
 }

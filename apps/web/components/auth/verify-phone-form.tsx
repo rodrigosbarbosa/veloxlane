@@ -60,6 +60,12 @@ export function VerifyPhoneForm() {
   }, [otpForm]);
 
   useEffect(() => {
+    if (step === "phone") {
+      otpForm.clearErrors("token");
+    }
+  }, [step, otpForm]);
+
+  useEffect(() => {
     if (retrySeconds === null || retrySeconds <= 0) {
       return;
     }
@@ -252,7 +258,14 @@ export function VerifyPhoneForm() {
           label={copy.auth.phoneLabel}
           type="tel"
           error={phoneForm.formState.errors.phone?.message}
-          {...phoneForm.register("phone")}
+          {...phoneForm.register("phone", {
+            onChange: () => {
+              otpForm.clearErrors("token");
+              if (status?.tone === "error") {
+                setStatus(null);
+              }
+            },
+          })}
         />
         {status ? (
           <StatusMessage message={status.message} tone={status.tone} />

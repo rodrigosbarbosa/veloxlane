@@ -69,6 +69,8 @@ export const copy = {
       "That email and password do not match. Try again or reset your password.",
     errorPhoneTaken:
       "That number is already verified on another account. Use a different number or contact support.",
+    errorPhoneSendFailed:
+      "We couldn't send a text right now. Double-check your number and try again.",
     errorRateLimited:
       "Too many attempts. Wait a bit, then try again — we keep bad actors out of the lane.",
     errorIdentityManualReview:

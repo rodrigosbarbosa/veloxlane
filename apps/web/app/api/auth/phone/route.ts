@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.auth.updateUser({ phone: normalized });
     if (error) {
       return NextResponse.json(
-        { message: mapPhoneAuthMessage(error.message) },
+        { message: mapPhoneAuthMessage(error.message, parsed.data.action) },
         { status: 400 },
       );
     }
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
   if (error) {
     await markOtpFailed(normalized);
     return NextResponse.json(
-      { message: mapPhoneAuthMessage(error.message) },
+      { message: mapPhoneAuthMessage(error.message, "verify") },
       { status: 400 },
     );
   }
