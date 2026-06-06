@@ -25,6 +25,7 @@ export function SignupForm() {
     tone: "error" | "success";
     message: string;
   } | null>(null);
+  const [pending, setPending] = useState(false);
   const {
     register,
     handleSubmit,
@@ -35,6 +36,7 @@ export function SignupForm() {
   });
 
   const onSubmit = handleSubmit(async (values) => {
+    setPending(true);
     setStatus(null);
     const supabase = createClient();
     const { data, error } = await supabase.auth.signUp({
@@ -61,11 +63,13 @@ export function SignupForm() {
             ? copy.auth.errorGeneric
             : copy.auth.errorEmailExists,
       });
+      setPending(false);
       return;
     }
 
     if (!data.user) {
       setStatus({ tone: "error", message: copy.auth.errorGeneric });
+      setPending(false);
       return;
     }
 
@@ -97,7 +101,7 @@ export function SignupForm() {
     router.push("/verify-phone");
   });
 
-  if (isSubmitting) {
+  if (pending) {
     return <AuthFormSkeleton fields={4} />;
   }
 

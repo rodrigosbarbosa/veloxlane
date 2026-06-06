@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode } from "react";
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
@@ -6,13 +6,17 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   hint?: ReactNode;
 };
 
-export function Field({ label, error, hint, id, ...props }: FieldProps) {
+export const Field = forwardRef<HTMLInputElement, FieldProps>(function Field(
+  { label, error, hint, id, ...props },
+  ref,
+) {
   const fieldId = id ?? props.name;
 
   return (
     <label className="flex flex-col gap-2 text-sm" htmlFor={fieldId}>
       <span className="font-medium text-[#F8F6F1]">{label}</span>
       <input
+        ref={ref}
         id={fieldId}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${fieldId}-error` : undefined}
@@ -27,4 +31,4 @@ export function Field({ label, error, hint, id, ...props }: FieldProps) {
       ) : null}
     </label>
   );
-}
+});

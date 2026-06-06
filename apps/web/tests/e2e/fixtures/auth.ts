@@ -83,7 +83,7 @@ async function handlePhoneRoute(route: Route, authState: MockAuthState) {
 }
 
 export const test = base.extend<AuthFixtures>({
-  authState: async ({}, use) => {
+  authState: async (_fixtures, use) => {
     const state = createMockAuthState();
     await use(state);
   },
@@ -142,7 +142,6 @@ export const test = base.extend<AuthFixtures>({
       await context.route("**/rest/v1/profiles*", async (route) => {
         const request = route.request();
         const url = new URL(request.url());
-        const path = url.pathname;
 
         if (request.method() === "GET") {
           const select = url.searchParams.get("select") ?? "";

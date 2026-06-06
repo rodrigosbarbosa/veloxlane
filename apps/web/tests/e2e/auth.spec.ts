@@ -12,13 +12,12 @@ async function typeInto(
   value: string,
 ) {
   const field = page.locator(selector);
+  await field.waitFor({ state: "visible" });
   await field.click();
   await field.fill(value);
-  await field.evaluate((element) => {
-    element.dispatchEvent(new Event("input", { bubbles: true }));
-    element.dispatchEvent(new Event("change", { bubbles: true }));
-    element.dispatchEvent(new Event("blur", { bubbles: true }));
-  });
+  await field.dispatchEvent("input");
+  await field.dispatchEvent("change");
+  await field.dispatchEvent("blur");
 }
 
 test.describe("auth onboarding", () => {

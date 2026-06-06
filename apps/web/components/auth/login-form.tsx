@@ -26,6 +26,7 @@ export function LoginForm() {
     tone: "error" | "success";
     message: string;
   } | null>(null);
+  const [pending, setPending] = useState(false);
   const {
     register,
     handleSubmit,
@@ -39,6 +40,7 @@ export function LoginForm() {
   });
 
   const onSubmit = handleSubmit(async (values) => {
+    setPending(true);
     setStatus(null);
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword(values);
@@ -52,6 +54,7 @@ export function LoginForm() {
             ? copy.auth.errorInvalidCredentials
             : copy.auth.errorGeneric,
       });
+      setPending(false);
       return;
     }
 
@@ -95,7 +98,7 @@ export function LoginForm() {
     });
   };
 
-  if (isSubmitting) {
+  if (pending) {
     return <AuthFormSkeleton fields={2} />;
   }
 

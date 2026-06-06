@@ -36,6 +36,8 @@ export function VerifyPhoneForm() {
   const router = useRouter();
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [hydrated, setHydrated] = useState(false);
+  const [phonePending, setPhonePending] = useState(false);
+  const [otpPending, setOtpPending] = useState(false);
   const [retrySeconds, setRetrySeconds] = useState<number | null>(null);
   const [status, setStatus] = useState<{
     tone: "error" | "success";
@@ -85,6 +87,7 @@ export function VerifyPhoneForm() {
   };
 
   const sendCode = phoneForm.handleSubmit(async (values) => {
+    setPhonePending(true);
     setStatus(null);
     setRetrySeconds(null);
     const response = await fetch("/api/auth/phone", {
@@ -100,6 +103,7 @@ export function VerifyPhoneForm() {
     if (!response.ok) {
       if (response.status === 429) {
         handleRateLimit(payload.retryAfterSeconds);
+        setPhonePending(false);
         return;
       }
 
@@ -107,16 +111,19 @@ export function VerifyPhoneForm() {
         tone: "error",
         message: payload.message ?? copy.auth.errorGeneric,
       });
+      setPhonePending(false);
       return;
     }
 
     otpForm.setValue("phone", values.phone);
     writeVerifyPhoneStorage(values.phone);
     setStep("otp");
+    setPhonePending(false);
     setStatus({ tone: "success", message: copy.auth.successCodeSent });
   });
 
   const verifyCode = otpForm.handleSubmit(async (values) => {
+    setOtpPending(true);
     setStatus(null);
     setRetrySeconds(null);
     const response = await fetch("/api/auth/phone", {
@@ -138,6 +145,7 @@ export function VerifyPhoneForm() {
     if (!response.ok) {
       if (response.status === 429) {
         handleRateLimit(payload.retryAfterSeconds);
+        setOtpPending(false);
         return;
       }
 
@@ -145,6 +153,7 @@ export function VerifyPhoneForm() {
         tone: "error",
         message: payload.message ?? copy.auth.errorGeneric,
       });
+      setOtpPending(false);
       return;
     }
 
@@ -217,7 +226,7 @@ export function VerifyPhoneForm() {
   }
 
   if (step === "phone") {
-    if (phoneForm.formState.isSubmitting) {
+    if (phonePending) {
       return <AuthFormSkeleton fields={1} />;
     }
 
@@ -248,7 +257,7 @@ export function VerifyPhoneForm() {
     );
   }
 
-  if (otpForm.formState.isSubmitting) {
+  if (otpPending) {
     return <AuthFormSkeleton fields={1} />;
   }
 

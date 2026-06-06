@@ -22,30 +22,43 @@ export function VerifyIdForm() {
     tone: "error" | "success" | "info";
     message: string;
   } | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     void (async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        return;
-      }
+      const fallback: IdentityProfile = {
+        identityAttempts: 0,
+        identityManualReview: false,
+        idVerified: false,
+      };
 
-      const { data } = await supabase
-        .from("profiles")
-        .select("identity_attempts, identity_manual_review, id_verified")
-        .eq("id", user.id)
-        .maybeSingle();
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-      if (data) {
+        if (!user) {
+          setProfile(fallback);
+          return;
+        }
+
+        const { data } = await supabase
+          .from("profiles")
+          .select("identity_attempts, identity_manual_review, id_verified")
+          .eq("id", user.id)
+          .maybeSingle();
+
         setProfile({
-          identityAttempts: data.identity_attempts,
-          identityManualReview: data.identity_manual_review,
-          idVerified: data.id_verified,
+          identityAttempts: data?.identity_attempts ?? 0,
+          identityManualReview: data?.identity_manual_review ?? false,
+          idVerified: data?.id_verified ?? false,
         });
+      } catch {
+        setProfile(fallback);
+      } finally {
+        setLoadingProfile(false);
       }
     })();
   }, []);
@@ -105,7 +118,7 @@ export function VerifyIdForm() {
     setStatus({ tone: "success", message: copy.auth.successIdentity });
   };
 
-  if (!profile) {
+  if (loadingProfile || !profile) {
     return <AuthFormSkeleton fields={1} />;
   }
 
