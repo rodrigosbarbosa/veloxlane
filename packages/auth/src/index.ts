@@ -30,7 +30,12 @@ export {
   type IdentityState,
 } from "./identity";
 
-export { isValidUsPhone, maskPhone, normalizeUsPhone } from "./phone";
+export {
+  isValidUsPhone,
+  maskPhone,
+  normalizeUsPhone,
+  validateUsPhone,
+} from "./phone";
 
 export {
   getLoginRedirectForSignupError,

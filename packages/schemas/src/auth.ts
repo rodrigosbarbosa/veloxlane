@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isValidUsPhone } from "./phone";
+
 export const userRoleSchema = z.enum(["buyer", "seller"]);
 
 export const onboardingStepSchema = z.enum([
@@ -45,8 +47,10 @@ export const forgotPasswordSchema = z.object({
 export const phoneSchema = z.object({
   phone: z
     .string()
-    .min(10, "Enter a valid US phone number.")
-    .max(20, "Phone number is too long."),
+    .trim()
+    .min(1, "Enter a valid US phone number.")
+    .max(20, "Phone number is too long.")
+    .refine(isValidUsPhone, "Enter a valid US phone number."),
 });
 
 export const otpSchema = z.object({

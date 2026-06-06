@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export * from "./auth";
+export * from "./phone";
 
 export const appEnvSchema = z.enum(["local", "staging", "production"]);
 
