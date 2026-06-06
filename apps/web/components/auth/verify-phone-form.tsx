@@ -3,10 +3,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { advanceOnboardingStep } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
-import { otpSchema, phoneSchema } from "@veloxlane/schemas";
+import {
+  formatPhoneInput,
+  normalizeUsPhone,
+  otpSchema,
+  phoneSchema,
+} from "@veloxlane/schemas";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
@@ -54,7 +59,7 @@ export function VerifyPhoneForm() {
     const saved = readVerifyPhoneStorage();
     if (saved) {
       otpForm.setValue("phone", saved.phone);
-      phoneForm.setValue("phone", saved.phone);
+      phoneForm.setValue("phone", formatPhoneInput(saved.phone));
       setStep("otp");
     }
     setHydrated(true);
@@ -69,7 +74,13 @@ export function VerifyPhoneForm() {
 
   const returnToPhoneStep = () => {
     clearVerifyPhoneStorage();
-    otpForm.reset({ phone: phoneForm.getValues("phone"), token: "" });
+    const displayPhone = phoneForm.getValues("phone");
+    const normalizedPhone =
+      normalizeUsPhone(displayPhone) ?? otpForm.getValues("phone");
+    phoneForm.reset({
+      phone: formatPhoneInput(displayPhone || normalizedPhone || ""),
+    });
+    otpForm.reset({ phone: normalizedPhone ?? "", token: "" });
     otpForm.clearErrors("token");
     setStatus(null);
     setRetrySeconds(null);
@@ -104,13 +115,21 @@ export function VerifyPhoneForm() {
   };
 
   const sendCode = phoneForm.handleSubmit(async (values) => {
+    const normalizedPhone = normalizeUsPhone(values.phone);
+    if (!normalizedPhone) {
+      phoneForm.setError("phone", {
+        message: "Enter a valid US phone number.",
+      });
+      return;
+    }
+
     setPhonePending(true);
     setStatus(null);
     setRetrySeconds(null);
     const response = await fetch("/api/auth/phone", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "send", phone: values.phone }),
+      body: JSON.stringify({ action: "send", phone: normalizedPhone }),
     });
 
     const payload = (await response.json()) as {
@@ -138,8 +157,8 @@ export function VerifyPhoneForm() {
       return;
     }
 
-    otpForm.setValue("phone", values.phone);
-    writeVerifyPhoneStorage(values.phone);
+    otpForm.setValue("phone", normalizedPhone);
+    writeVerifyPhoneStorage(normalizedPhone);
     setStep("otp");
     setPhonePending(false);
     setStatus({ tone: "success", message: copy.auth.successCodeSent });
@@ -265,19 +284,31 @@ export function VerifyPhoneForm() {
 
     return (
       <form className="flex flex-col gap-5" onSubmit={sendCode} noValidate>
-        <Field
-          autoComplete="tel"
-          label={copy.auth.phoneLabel}
-          type="tel"
-          error={phoneForm.formState.errors.phone?.message}
-          {...phoneForm.register("phone", {
-            onChange: () => {
-              otpForm.clearErrors("token");
-              if (status?.tone === "error") {
-                setStatus(null);
-              }
-            },
-          })}
+        <Controller
+          control={phoneForm.control}
+          name="phone"
+          render={({ field }) => (
+            <Field
+              autoComplete="tel"
+              inputMode="tel"
+              label={copy.auth.phoneLabel}
+              type="tel"
+              error={phoneForm.formState.errors.phone?.message}
+              name={field.name}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              value={field.value ?? ""}
+              onChange={(event) => {
+                const formatted = formatPhoneInput(event.target.value);
+                field.onChange(formatted);
+                phoneForm.clearErrors("phone");
+                otpForm.clearErrors("token");
+                if (status?.tone === "error") {
+                  setStatus(null);
+                }
+              }}
+            />
+          )}
         />
         {status ? (
           <StatusMessage message={status.message} tone={status.tone} />

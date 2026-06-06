@@ -49,7 +49,7 @@ export const phoneSchema = z.object({
     .string()
     .trim()
     .min(1, "Enter a valid US phone number.")
-    .max(20, "Phone number is too long.")
+    .max(16, "Phone number is too long.")
     .refine(isValidUsPhone, "Enter a valid US phone number."),
 });
 

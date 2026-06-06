@@ -19,11 +19,11 @@ import { getPostAuthPath } from "@/lib/auth/profile";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 
 const bodySchema = z.discriminatedUnion("action", [
-  z.object({ action: z.literal("send"), phone: z.string() }),
-  z.object({ action: z.literal("resend"), phone: z.string() }),
+  z.object({ action: z.literal("send"), phone: z.string().trim() }),
+  z.object({ action: z.literal("resend"), phone: z.string().trim() }),
   z.object({
     action: z.literal("verify"),
-    phone: z.string(),
+    phone: z.string().trim(),
     token: z.string().length(6),
   }),
 ]);

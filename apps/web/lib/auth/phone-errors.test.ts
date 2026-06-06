@@ -47,6 +47,24 @@ describe("mapPhoneAuthMessage", () => {
     ).toBe(copy.auth.errorPhoneSendFailed);
   });
 
+  it("maps broad provider invalid-number errors to send failure, not format error", () => {
+    expect(mapPhoneAuthMessage("Phone number is invalid", "send")).toBe(
+      copy.auth.errorPhoneSendFailed,
+    );
+    expect(
+      mapPhoneAuthMessage(
+        "Error sending phone_change OTP to provider: Invalid 'To' Phone Number More information: https://www.twilio.com/docs/errors/21211",
+        "send",
+      ),
+    ).toBe(copy.auth.errorPhoneSendFailed);
+  });
+
+  it("maps explicit phone format validation errors", () => {
+    expect(mapPhoneAuthMessage("Invalid phone number format", "send")).toBe(
+      "Enter a valid US phone number.",
+    );
+  });
+
   it("extracts Twilio 20003 diagnostics for server logs", () => {
     expect(
       parsePhoneSendFailureDetails({

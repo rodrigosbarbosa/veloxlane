@@ -25,7 +25,33 @@ function isSmsProviderFailure(
     normalizedCode === "sms_send_failed" ||
     normalizedMessage.includes("to provider") ||
     normalizedMessage.includes("twilio") ||
-    normalizedMessage.includes("authenticate")
+    normalizedMessage.includes("authenticate") ||
+    normalizedMessage.includes("unable to send") ||
+    normalizedMessage.includes("sms provider")
+  );
+}
+
+function isPhoneFormatValidationError(
+  normalizedMessage: string,
+  errorCode?: string,
+): boolean {
+  const normalizedCode = errorCode?.toLowerCase() ?? "";
+
+  if (
+    normalizedCode === "phone_not_valid" ||
+    normalizedCode === "validation_failed"
+  ) {
+    return normalizedMessage.includes("phone");
+  }
+
+  return (
+    (normalizedMessage.includes("invalid phone") ||
+      normalizedMessage.includes("invalid phone number") ||
+      normalizedMessage.includes("not a valid phone") ||
+      normalizedMessage.includes("phone number format")) &&
+    !normalizedMessage.includes("provider") &&
+    !normalizedMessage.includes("twilio") &&
+    !normalizedMessage.includes("otp")
   );
 }
 
@@ -100,15 +126,12 @@ export function mapPhoneAuthMessage(
     return copy.auth.errorGeneric;
   }
 
-  if (
-    normalized.includes("invalid") &&
-    (normalized.includes("phone") || normalized.includes("number"))
-  ) {
-    return "Enter a valid US phone number.";
-  }
-
   if (isSmsProviderFailure(normalized, resolvedCode)) {
     return copy.auth.errorPhoneSendFailed;
+  }
+
+  if (isPhoneFormatValidationError(normalized, resolvedCode)) {
+    return "Enter a valid US phone number.";
   }
 
   return copy.auth.errorPhoneSendFailed;
