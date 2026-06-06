@@ -92,10 +92,6 @@ export const test = base.extend<AuthFixtures>({
 
       await installStripeMock(page, authState);
 
-      const supabaseOrigin = (
-        process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321"
-      ).replace(/\/$/, "");
-
       await context.route("**/auth/v1/signup", async (route) => {
         const body = route.request().postDataJSON() as {
           email?: string;
