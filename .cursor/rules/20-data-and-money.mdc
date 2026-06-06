@@ -1,0 +1,9 @@
+---
+description: DB + payments guardrails
+globs: supabase/**, packages/db/**, packages/schemas/**
+---
+- Webhooks are idempotent and signature-verified. Never trust a client-supplied
+  amount — re-derive every charge/transfer server-side.
+- Validate all input with the shared Zod schemas in packages/schemas.
+- Write audit_log entries (via triggers) for state changes on listings, offers,
+  escrow_transactions, and bans.
