@@ -9,9 +9,17 @@ import {
 } from "@expo-google-fonts/inter";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { mobileTheme, textStyle } from "~/theme/mobileTheme";
+
+import { bootstrapPermissions } from "~/lib/permissions";
+import { supabase } from "~/lib/supabase";
+import {
+  modalStackScreenOptions,
+  stackScreenOptions,
+} from "~/navigation/screenOptions";
+import { mobileTheme } from "~/theme/mobileTheme";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -21,6 +29,11 @@ export default function RootLayout() {
     Inter_700Bold,
   });
 
+  useEffect(() => {
+    void bootstrapPermissions();
+    void supabase.auth.getSession();
+  }, []);
+
   if (!fontsLoaded) {
     return <View style={styles.loading} />;
   }
@@ -28,27 +41,23 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          contentStyle: {
-            backgroundColor: mobileTheme.colors.surface.canvas,
-          },
-          headerStyle: {
-            backgroundColor: mobileTheme.colors.surface.canvas,
-          },
-          headerShadowVisible: false,
-          headerTintColor: mobileTheme.colors.text.onDark,
-          headerTitleStyle: {
-            ...textStyle("label"),
-            color: mobileTheme.colors.text.onDark,
-          },
-        }}
-      >
+      <Stack screenOptions={stackScreenOptions}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
-          name="listing/new"
-          options={{ title: "Start a listing" }}
+          name="(onboarding)"
+          options={{ ...modalStackScreenOptions, headerShown: false }}
         />
+        <Stack.Screen
+          name="(escrow)"
+          options={{ ...modalStackScreenOptions, headerShown: false }}
+        />
+        <Stack.Screen
+          name="(affiliates)"
+          options={{ ...modalStackScreenOptions, headerShown: false }}
+        />
+        <Stack.Screen name="listing/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="deal/[id]" options={{ headerShown: false }} />
       </Stack>
     </SafeAreaProvider>
   );

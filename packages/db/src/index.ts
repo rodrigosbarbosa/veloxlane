@@ -66,3 +66,8 @@ export type Tables<T extends keyof Database["public"]["Tables"]> =
 
 export const listingTable = "listings" as const;
 export const profilesTable = "profiles" as const;
+
+export {
+  createSupabaseClient,
+  type SupabaseAuthStorage,
+} from "./create-client";

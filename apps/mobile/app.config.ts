@@ -17,20 +17,46 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.veloxlane.mobile",
+    infoPlist: {
+      NSFaceIDUsageDescription:
+        "VeloxLane uses Face ID to protect your account and deal actions.",
+    },
   },
   android: {
     package: "com.veloxlane.mobile",
     adaptiveIcon: {
       backgroundColor: SPLASH_BACKGROUND,
     },
+    intentFilters: [
+      {
+        action: "VIEW",
+        autoVerify: true,
+        data: [
+          { scheme: "veloxlane", host: "listing" },
+          { scheme: "veloxlane", host: "deal" },
+        ],
+        category: ["BROWSABLE", "DEFAULT"],
+      },
+    ],
   },
   web: {
     bundler: "metro",
     output: "single",
   },
-  plugins: ["expo-router", "expo-font", "expo-asset"],
+  plugins: [
+    "expo-router",
+    "expo-font",
+    "expo-asset",
+    "expo-secure-store",
+    "expo-notifications",
+  ],
   experiments: {
     typedRoutes: true,
+  },
+  extra: {
+    eas: {
+      projectId: "veloxlane-mobile",
+    },
   },
 };
 
