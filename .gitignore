@@ -39,3 +39,5 @@ ios/
 
 # generated
 *.tsbuildinfo
+.vercel
+.env*.local
