@@ -96,66 +96,56 @@ export const test = base.extend<AuthFixtures>({
         process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321"
       ).replace(/\/$/, "");
 
-      await context.route(`${supabaseOrigin}/**`, async (route) => {
+      await context.route("**/auth/v1/signup", async (route) => {
+        const body = route.request().postDataJSON() as {
+          email?: string;
+          data?: { full_name?: string };
+        };
+        authState.profile = {
+          id: authState.userId,
+          email: body.email ?? "seller@example.com",
+          full_name: body.data?.full_name ?? "Test Seller",
+          role: "seller",
+          phone: null,
+          phone_verified: false,
+          id_verified: false,
+          onboarding_step: "phone",
+          identity_attempts: 0,
+          identity_manual_review: false,
+        };
+        await route.fulfill({
+          json: {
+            user: { id: authState.userId, email: authState.profile.email },
+            session: {
+              access_token: authState.accessToken,
+              refresh_token: "mock-refresh",
+              expires_in: 3600,
+              token_type: "bearer",
+            },
+          },
+        });
+      });
+
+      await context.route("**/auth/v1/user", async (route) => {
+        if (!authState.profile) {
+          await route.fulfill({ status: 401, json: { error: "no_user" } });
+          return;
+        }
+        await route.fulfill({
+          json: {
+            id: authState.userId,
+            email: authState.profile.email,
+            user_metadata: { full_name: authState.profile.full_name },
+          },
+        });
+      });
+
+      await context.route("**/rest/v1/profiles*", async (route) => {
         const request = route.request();
         const url = new URL(request.url());
         const path = url.pathname;
 
-        if (request.method() === "POST" && path === "/auth/v1/signup") {
-          const body = request.postDataJSON() as {
-            email?: string;
-            data?: { full_name?: string };
-          };
-          authState.profile = {
-            id: authState.userId,
-            email: body.email ?? "seller@example.com",
-            full_name: body.data?.full_name ?? "Test Seller",
-            role: "seller",
-            phone: null,
-            phone_verified: false,
-            id_verified: false,
-            onboarding_step: "phone",
-            identity_attempts: 0,
-            identity_manual_review: false,
-          };
-          await route.fulfill({
-            json: {
-              user: { id: authState.userId, email: authState.profile.email },
-              session: {
-                access_token: authState.accessToken,
-                refresh_token: "mock-refresh",
-                expires_in: 3600,
-                token_type: "bearer",
-              },
-            },
-          });
-          return;
-        }
-
-        if (request.method() === "GET" && path === "/auth/v1/user") {
-          if (!authState.profile) {
-            await route.fulfill({ status: 401, json: { error: "no_user" } });
-            return;
-          }
-          await route.fulfill({
-            json: {
-              id: authState.userId,
-              email: authState.profile.email,
-              user_metadata: { full_name: authState.profile.full_name },
-            },
-          });
-          return;
-        }
-
-        if (request.method() === "PATCH" && path === "/auth/v1/user") {
-          await route.fulfill({ json: { user: { id: authState.userId } } });
-          return;
-        }
-
-        if (
-          request.method() === "GET" &&
-          path.startsWith("/rest/v1/profiles")
-        ) {
+        if (request.method() === "GET") {
           const select = url.searchParams.get("select") ?? "";
           if (!authState.profile) {
             await route.fulfill({ json: [] });
@@ -187,7 +177,7 @@ export const test = base.extend<AuthFixtures>({
           return;
         }
 
-        if (request.method() === "PATCH" && path === "/rest/v1/profiles") {
+        if (request.method() === "PATCH") {
           const body = request.postDataJSON() as Record<string, unknown>;
           if (authState.profile) {
             authState.profile = {

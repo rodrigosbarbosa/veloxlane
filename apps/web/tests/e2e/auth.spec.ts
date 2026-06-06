@@ -1,6 +1,6 @@
 import { copy } from "@veloxlane/brand/copy";
 
-import { expect, seedAuthenticatedSeller, test } from "./fixtures/auth";
+import { expect, test } from "./fixtures/auth";
 
 const strongPassword = "VeloxLane1";
 const testPhone = "5555550100";
@@ -22,10 +22,8 @@ test.describe("auth onboarding", () => {
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
     await expect(page).toHaveURL(/\/verify-phone/);
 
-    await page.getByLabel(copy.auth.phoneLabel).fill(`+1${testPhone}`);
-    const sendCode = page.waitForResponse(/\/api\/auth\/phone$/);
+    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
-    await sendCode;
 
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
     await page.getByLabel(copy.auth.otpLabel).fill(validOtp);
@@ -51,6 +49,7 @@ test.describe("auth onboarding", () => {
   test("sad path: weak password shows specific guidance", async ({ page }) => {
     await page.goto("/signup");
 
+    await page.getByLabel(copy.auth.fullNameLabel).fill("Test Buyer");
     await page.getByLabel(copy.auth.emailLabel).fill("buyer@example.com");
     await page.locator("#password").fill("short");
     await page.locator("#confirmPassword").fill("short");
@@ -85,10 +84,8 @@ test.describe("auth onboarding", () => {
     };
 
     await page.goto("/verify-phone");
-    await page.getByLabel(copy.auth.phoneLabel).fill(`+1${testPhone}`);
-    const sendCode = page.waitForResponse(/\/api\/auth\/phone$/);
+    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
-    await sendCode;
 
     const otpField = page.getByLabel(copy.auth.otpLabel);
     await expect(otpField).toBeVisible();
@@ -105,26 +102,23 @@ test.describe("auth onboarding", () => {
     page,
     authState,
   }) => {
-    authState.profile = {
-      id: authState.userId,
-      email: "seller@example.com",
-      full_name: "Test Seller",
-      role: "seller",
-      phone: "+15555550100",
-      phone_verified: true,
-      id_verified: false,
-      onboarding_step: "identity",
-      identity_attempts: 1,
-      identity_manual_review: false,
-    };
-    authState.stripeShouldFail = true;
+    await page.goto("/signup");
+    await page.getByLabel(copy.auth.fullNameLabel).fill("Test Seller");
+    await page.getByLabel(copy.auth.emailLabel).fill("seller@example.com");
+    await page.locator("#password").fill(strongPassword);
+    await page.locator("#confirmPassword").fill(strongPassword);
+    await page.getByRole("radio", { name: copy.auth.roleSeller }).check();
+    await page.getByRole("button", { name: copy.auth.submitSignup }).click();
+    await expect(page).toHaveURL(/\/verify-phone/);
 
-    await seedAuthenticatedSeller(page);
-    await page.goto("/verify-id");
-    await page.waitForResponse(/\/rest\/v1\/profiles/);
-    await expect(
-      page.getByRole("button", { name: copy.auth.submitIdentity }),
-    ).toBeVisible();
+    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await page.getByRole("button", { name: copy.auth.submitPhone }).click();
+    await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
+    await page.getByLabel(copy.auth.otpLabel).fill(validOtp);
+    await page.getByRole("button", { name: copy.auth.submitOtp }).click();
+    await expect(page).toHaveURL(/\/verify-id/);
+
+    authState.stripeShouldFail = true;
     await page.getByRole("button", { name: copy.auth.submitIdentity }).click();
 
     await expect(page.getByText(copy.auth.errorGeneric)).toBeVisible();
@@ -151,10 +145,8 @@ test.describe("auth onboarding", () => {
     };
 
     await page.goto("/verify-phone");
-    await page.getByLabel(copy.auth.phoneLabel).fill(`+1${testPhone}`);
-    const sendCode = page.waitForResponse(/\/api\/auth\/phone$/);
+    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
-    await sendCode;
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
 
     await page.reload();
