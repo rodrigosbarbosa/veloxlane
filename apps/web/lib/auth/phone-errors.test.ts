@@ -1,7 +1,10 @@
 import { copy } from "@veloxlane/brand/copy";
 import { describe, expect, it } from "vitest";
 
-import { mapPhoneAuthMessage } from "./phone-errors";
+import {
+  mapPhoneAuthMessage,
+  parsePhoneSendFailureDetails,
+} from "./phone-errors";
 
 describe("mapPhoneAuthMessage", () => {
   it("maps send failures with code wording to phone send copy, not OTP mismatch", () => {
@@ -42,5 +45,21 @@ describe("mapPhoneAuthMessage", () => {
         "send",
       ),
     ).toBe(copy.auth.errorPhoneSendFailed);
+  });
+
+  it("extracts Twilio 20003 diagnostics for server logs", () => {
+    expect(
+      parsePhoneSendFailureDetails({
+        message:
+          "Error sending phone_change OTP to provider: Authenticate More information: https://www.twilio.com/docs/errors/20003",
+        code: "sms_send_failed",
+      }),
+    ).toEqual({
+      supabaseCode: "sms_send_failed",
+      supabaseMessage:
+        "Error sending phone_change OTP to provider: Authenticate More information: https://www.twilio.com/docs/errors/20003",
+      twilioErrorCode: "20003",
+      hint: expect.stringContaining("Twilio Verify"),
+    });
   });
 });

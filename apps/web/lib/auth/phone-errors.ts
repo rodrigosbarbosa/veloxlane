@@ -8,6 +8,13 @@ export type PhoneAuthErrorInput = {
   code?: string;
 };
 
+export type PhoneSendFailureDetails = {
+  supabaseCode?: string;
+  supabaseMessage: string;
+  twilioErrorCode?: string;
+  hint?: string;
+};
+
 function isSmsProviderFailure(
   normalizedMessage: string,
   errorCode?: string,
@@ -20,6 +27,30 @@ function isSmsProviderFailure(
     normalizedMessage.includes("twilio") ||
     normalizedMessage.includes("authenticate")
   );
+}
+
+export function parsePhoneSendFailureDetails(
+  error: PhoneAuthErrorInput,
+): PhoneSendFailureDetails {
+  const twilioMatch = error.message.match(/twilio\.com\/docs\/errors\/(\d+)/i);
+  const twilioErrorCode = twilioMatch?.[1];
+  const normalized = error.message.toLowerCase();
+
+  let hint: string | undefined;
+  if (twilioErrorCode === "20003") {
+    hint =
+      "Twilio rejected credentials (20003). In Supabase Dashboard > Auth > Phone, select Twilio Verify (not plain Twilio), then confirm Account SID, Auth Token, and Verify Service SID (VA...).";
+  } else if (isSmsProviderFailure(normalized, error.code)) {
+    hint =
+      "SMS provider failed to deliver the phone_change OTP. Check Supabase Auth phone provider settings.";
+  }
+
+  return {
+    supabaseCode: error.code,
+    supabaseMessage: error.message,
+    twilioErrorCode,
+    hint,
+  };
 }
 
 export function mapPhoneAuthMessage(

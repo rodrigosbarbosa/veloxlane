@@ -3,7 +3,10 @@ import { copy } from "@veloxlane/brand/copy";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { mapPhoneAuthMessage } from "@/lib/auth/phone-errors";
+import {
+  mapPhoneAuthMessage,
+  parsePhoneSendFailureDetails,
+} from "@/lib/auth/phone-errors";
 import {
   assertPhoneAvailable,
   canSendOtp,
@@ -72,13 +75,16 @@ export async function POST(request: Request) {
       );
     }
 
+    // Logged-in phone attach uses phone_change OTP (updateUser + verifyOtp type phone_change).
     const { error } = await supabase.auth.updateUser({ phone: normalized });
     if (error) {
       console.error("[auth/phone] updateUser failed", {
         action: parsed.data.action,
-        code: error.code,
-        message: error.message,
         userId: user.id,
+        ...parsePhoneSendFailureDetails({
+          message: error.message,
+          code: error.code,
+        }),
       });
       return NextResponse.json(
         {
