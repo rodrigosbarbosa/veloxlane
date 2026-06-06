@@ -17,6 +17,7 @@ import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
 import { Field } from "@/components/auth/field";
 import { StatusMessage } from "@/components/auth/status-message";
 import { Button } from "@/components/ui/button";
+import { getAuthCallbackUrl } from "@/lib/auth/redirect-url";
 import {
   mapSignupAuthMessage,
   shouldRedirectSignupToLogin,
@@ -47,6 +48,7 @@ export function SignupForm() {
       email: values.email,
       password: values.password,
       options: {
+        emailRedirectTo: getAuthCallbackUrl(),
         data: {
           full_name: values.fullName,
           role: values.role,

@@ -39,11 +39,28 @@ Project: `rsjgjsjrkdtlhiohjigw` (staging)
 
 Auth templates (confirm signup, reset password, magic link) remain in **Authentication → Email Templates**; only the transport changes to Resend.
 
+### Auth redirect URLs (required for email confirm / magic link)
+
+**Authentication → URL Configuration**
+
+| Field         | Staging value                                 |
+| ------------- | --------------------------------------------- |
+| Site URL      | `https://staging.veloxlane.com`               |
+| Redirect URLs | `https://staging.veloxlane.com/**`            |
+|               | `https://staging.veloxlane.com/auth/callback` |
+
+Without these, confirmation emails fall back to the Site URL (often `http://localhost:3000/?code=...`).
+
+App code passes `emailRedirectTo: ${NEXT_PUBLIC_APP_URL}/auth/callback` on signup and magic-link flows. Set `NEXT_PUBLIC_APP_URL=https://staging.veloxlane.com` on the staging Vercel project and redeploy.
+
+Local `supabase/config.toml` keeps `site_url = "http://127.0.0.1:3000"` for the CLI stack only; remote staging uses the dashboard values above.
+
 ## 3. Vercel environment variables
 
 Add to the `veloxlane-web` project (Preview + Production as needed):
 
 ```
+NEXT_PUBLIC_APP_URL=https://staging.veloxlane.com
 RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL=VeloxLane <hello@veloxlane.com>
 ```

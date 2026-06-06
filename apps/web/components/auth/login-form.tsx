@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
+import { getAuthCallbackUrl } from "@/lib/auth/redirect-url";
 import { Field } from "@/components/auth/field";
 import { StatusMessage } from "@/components/auth/status-message";
 import { Button } from "@/components/ui/button";
@@ -156,7 +157,7 @@ export function LoginForm() {
     const { error } = await supabase.auth.signInWithOtp({
       email: parsed.data.email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: getAuthCallbackUrl(),
       },
     });
 
@@ -171,7 +172,7 @@ export function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: getAuthCallbackUrl(),
       },
     });
   };
