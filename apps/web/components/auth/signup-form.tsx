@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   advanceOnboardingStep,
-  getLoginRedirectForSignupError,
+  isSignupDuplicateUser,
   mapSupabaseAuthError,
 } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
@@ -17,6 +17,10 @@ import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
 import { Field } from "@/components/auth/field";
 import { StatusMessage } from "@/components/auth/status-message";
 import { Button } from "@/components/ui/button";
+import {
+  mapSignupAuthMessage,
+  shouldRedirectSignupToLogin,
+} from "@/lib/auth/signup-errors";
 import { createClient } from "@/lib/supabase/client";
 
 export function SignupForm() {
@@ -51,20 +55,33 @@ export function SignupForm() {
     });
 
     if (error) {
-      const code = mapSupabaseAuthError(error.message);
-      if (getLoginRedirectForSignupError(code)) {
-        router.push(`/login?email=${encodeURIComponent(values.email)}`);
+      const code = mapSupabaseAuthError({
+        message: error.message,
+        code: error.code,
+      });
+
+      if (shouldRedirectSignupToLogin(code)) {
+        router.push(
+          `/login?email=${encodeURIComponent(values.email)}&reason=email-exists`,
+        );
         return;
       }
 
       setStatus({
         tone: "error",
-        message:
-          code === "unknown"
-            ? copy.auth.errorGeneric
-            : copy.auth.errorEmailExists,
+        message: mapSignupAuthMessage({
+          message: error.message,
+          code: error.code,
+        }),
       });
       setPending(false);
+      return;
+    }
+
+    if (isSignupDuplicateUser(data.user?.identities)) {
+      router.push(
+        `/login?email=${encodeURIComponent(values.email)}&reason=email-exists`,
+      );
       return;
     }
 

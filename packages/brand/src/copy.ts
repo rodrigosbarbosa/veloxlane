@@ -63,6 +63,8 @@ export const copy = {
     successMagicLink: "Check your email for a sign-in link.",
     errorEmailExists:
       "That email already has a lane here. Sign in or reset your password.",
+    errorEmailPendingConfirmation:
+      "That email is waiting on confirmation. Check your inbox for the link, then sign in.",
     errorInvalidCredentials:
       "That email and password do not match. Try again or reset your password.",
     errorPhoneTaken:

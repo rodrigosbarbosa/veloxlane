@@ -26,10 +26,17 @@ export function LoginForm() {
     tone: "error" | "success";
     message: string;
   } | null>(() => {
-    if (searchParams.get("reason") === "sign-in-required") {
+    const reason = searchParams.get("reason");
+    if (reason === "sign-in-required") {
       return {
         tone: "error",
         message: copy.auth.errorSignInRequired,
+      };
+    }
+    if (reason === "email-exists") {
+      return {
+        tone: "error",
+        message: copy.auth.errorEmailExists,
       };
     }
     return null;
@@ -48,10 +55,18 @@ export function LoginForm() {
   });
 
   useEffect(() => {
-    if (searchParams.get("reason") === "sign-in-required") {
+    const reason = searchParams.get("reason");
+    if (reason === "sign-in-required") {
       setStatus({
         tone: "error",
         message: copy.auth.errorSignInRequired,
+      });
+      return;
+    }
+    if (reason === "email-exists") {
+      setStatus({
+        tone: "error",
+        message: copy.auth.errorEmailExists,
       });
     }
   }, [searchParams]);

@@ -2,7 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   advanceOnboardingStep,
   getLoginRedirectForSignupError,
+  isSignupDuplicateUser,
   mapSupabaseAuthError,
+  type AuthErrorCode,
 } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
 import { signupSchema, type SignupInput } from "@veloxlane/schemas";
@@ -31,6 +33,23 @@ export default function SignUpScreen() {
 
   const role = watch("role");
 
+  const signupErrorMessage = (code: AuthErrorCode): string => {
+    switch (code) {
+      case "email_exists":
+        return copy.auth.errorEmailExists;
+      case "email_pending_confirmation":
+        return copy.auth.errorEmailPendingConfirmation;
+      case "rate_limited":
+        return copy.auth.errorRateLimited;
+      case "phone_taken":
+        return copy.auth.errorPhoneTaken;
+      case "invalid_credentials":
+        return copy.auth.errorInvalidCredentials;
+      default:
+        return copy.auth.errorGeneric;
+    }
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     setMessage(null);
     const { data, error } = await supabase.auth.signUp({
@@ -39,12 +58,20 @@ export default function SignUpScreen() {
     });
 
     if (error) {
-      const code = mapSupabaseAuthError(error.message);
+      const code = mapSupabaseAuthError({
+        message: error.message,
+        code: error.code,
+      });
       if (getLoginRedirectForSignupError(code)) {
         router.push("/login");
         return;
       }
-      setMessage(copy.auth.errorEmailExists);
+      setMessage(signupErrorMessage(code));
+      return;
+    }
+
+    if (isSignupDuplicateUser(data.user?.identities)) {
+      router.push("/login");
       return;
     }
 

@@ -34,6 +34,8 @@ export { isValidUsPhone, maskPhone, normalizeUsPhone } from "./phone";
 
 export {
   getLoginRedirectForSignupError,
+  isSignupDuplicateUser,
   mapSupabaseAuthError,
   type AuthErrorCode,
+  type SupabaseAuthErrorInput,
 } from "./errors";
