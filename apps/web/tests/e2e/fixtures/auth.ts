@@ -52,14 +52,17 @@ async function handlePhoneRoute(route: Route, authState: MockAuthState) {
       ).toISOString();
       await route.fulfill({
         status: 429,
-        json: { message: copy.auth.errorRateLimited },
+        json: {
+          message: copy.auth.errorRateLimited,
+          retryAfterSeconds: 86_400,
+        },
       });
       return;
     }
 
     await route.fulfill({
       status: 400,
-      json: { message: "Invalid code. Try again." },
+      json: { message: copy.auth.errorInvalidOtp },
     });
     return;
   }

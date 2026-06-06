@@ -32,7 +32,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm exec next dev --port ${PORT}`,
+    command: `sh -c 'set -a && . ./.env.test && set +a && pnpm exec next dev --port ${PORT}'`,
     cwd: ".",
     url: `http://127.0.0.1:${PORT}/signup`,
     reuseExistingServer: !process.env.CI,

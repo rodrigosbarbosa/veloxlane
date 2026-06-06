@@ -5,13 +5,19 @@ import { advanceOnboardingStep } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
 import { otpSchema, phoneSchema } from "@veloxlane/schemas";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
 import { Field } from "@/components/auth/field";
 import { StatusMessage } from "@/components/auth/status-message";
 import { Button } from "@/components/ui/button";
+import {
+  clearVerifyPhoneStorage,
+  readVerifyPhoneStorage,
+  writeVerifyPhoneStorage,
+} from "@/lib/auth/verify-phone-storage";
 import { createClient } from "@/lib/supabase/client";
 
 const phoneStepSchema = phoneSchema;
@@ -20,9 +26,17 @@ const otpStepSchema = otpSchema;
 type PhoneStep = z.infer<typeof phoneStepSchema>;
 type OtpStep = z.infer<typeof otpStepSchema>;
 
+function formatRetryCountdown(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
 export function VerifyPhoneForm() {
   const router = useRouter();
   const [step, setStep] = useState<"phone" | "otp">("phone");
+  const [hydrated, setHydrated] = useState(false);
+  const [retrySeconds, setRetrySeconds] = useState<number | null>(null);
   const [status, setStatus] = useState<{
     tone: "error" | "success";
     message: string;
@@ -34,16 +48,61 @@ export function VerifyPhoneForm() {
     resolver: zodResolver(otpStepSchema),
   });
 
+  useEffect(() => {
+    const saved = readVerifyPhoneStorage();
+    if (saved) {
+      otpForm.setValue("phone", saved.phone);
+      setStep("otp");
+    }
+    setHydrated(true);
+  }, [otpForm]);
+
+  useEffect(() => {
+    if (retrySeconds === null || retrySeconds <= 0) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setRetrySeconds((current) => {
+        if (current === null || current <= 1) {
+          return null;
+        }
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [retrySeconds]);
+
+  const handleRateLimit = (retryAfterSeconds?: number) => {
+    if (retryAfterSeconds && retryAfterSeconds > 0) {
+      setRetrySeconds(retryAfterSeconds);
+    }
+    setStatus({
+      tone: "error",
+      message: copy.auth.errorRateLimited,
+    });
+  };
+
   const sendCode = phoneForm.handleSubmit(async (values) => {
     setStatus(null);
+    setRetrySeconds(null);
     const response = await fetch("/api/auth/phone", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "send", phone: values.phone }),
     });
 
-    const payload = (await response.json()) as { message?: string };
+    const payload = (await response.json()) as {
+      message?: string;
+      retryAfterSeconds?: number;
+    };
     if (!response.ok) {
+      if (response.status === 429) {
+        handleRateLimit(payload.retryAfterSeconds);
+        return;
+      }
+
       setStatus({
         tone: "error",
         message: payload.message ?? copy.auth.errorGeneric,
@@ -52,12 +111,14 @@ export function VerifyPhoneForm() {
     }
 
     otpForm.setValue("phone", values.phone);
+    writeVerifyPhoneStorage(values.phone);
     setStep("otp");
-    setStatus({ tone: "success", message: "Code sent." });
+    setStatus({ tone: "success", message: copy.auth.successCodeSent });
   });
 
   const verifyCode = otpForm.handleSubmit(async (values) => {
     setStatus(null);
+    setRetrySeconds(null);
     const response = await fetch("/api/auth/phone", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -71,9 +132,15 @@ export function VerifyPhoneForm() {
     const payload = (await response.json()) as {
       message?: string;
       next?: string;
+      retryAfterSeconds?: number;
     };
 
     if (!response.ok) {
+      if (response.status === 429) {
+        handleRateLimit(payload.retryAfterSeconds);
+        return;
+      }
+
       setStatus({
         tone: "error",
         message: payload.message ?? copy.auth.errorGeneric,
@@ -106,24 +173,54 @@ export function VerifyPhoneForm() {
         .eq("id", user.id);
     }
 
+    clearVerifyPhoneStorage();
     setStatus({ tone: "success", message: copy.auth.successPhone });
     router.push(payload.next ?? "/");
   });
 
   const resendCode = async () => {
     const phone = otpForm.getValues("phone");
-    if (!phone) {
+    if (!phone || retrySeconds !== null) {
       return;
     }
 
-    await fetch("/api/auth/phone", {
+    setStatus(null);
+    const response = await fetch("/api/auth/phone", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "resend", phone }),
     });
+
+    const payload = (await response.json()) as {
+      message?: string;
+      retryAfterSeconds?: number;
+    };
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        handleRateLimit(payload.retryAfterSeconds);
+        return;
+      }
+
+      setStatus({
+        tone: "error",
+        message: payload.message ?? copy.auth.errorGeneric,
+      });
+      return;
+    }
+
+    setStatus({ tone: "success", message: copy.auth.successCodeSent });
   };
 
+  if (!hydrated) {
+    return <AuthFormSkeleton fields={1} />;
+  }
+
   if (step === "phone") {
+    if (phoneForm.formState.isSubmitting) {
+      return <AuthFormSkeleton fields={1} />;
+    }
+
     return (
       <form className="flex flex-col gap-5" onSubmit={sendCode} noValidate>
         <Field
@@ -136,13 +233,23 @@ export function VerifyPhoneForm() {
         {status ? (
           <StatusMessage message={status.message} tone={status.tone} />
         ) : null}
-        <Button disabled={phoneForm.formState.isSubmitting} type="submit">
-          {phoneForm.formState.isSubmitting
-            ? copy.auth.loading
-            : copy.auth.submitPhone}
+        {retrySeconds !== null ? (
+          <p className="text-sm text-[#A7AEB9]" role="status">
+            {copy.auth.retryWaitPrefix} {formatRetryCountdown(retrySeconds)}
+          </p>
+        ) : null}
+        <Button
+          disabled={phoneForm.formState.isSubmitting || retrySeconds !== null}
+          type="submit"
+        >
+          {copy.auth.submitPhone}
         </Button>
       </form>
     );
+  }
+
+  if (otpForm.formState.isSubmitting) {
+    return <AuthFormSkeleton fields={1} />;
   }
 
   return (
@@ -157,14 +264,21 @@ export function VerifyPhoneForm() {
       {status ? (
         <StatusMessage message={status.message} tone={status.tone} />
       ) : null}
-      <Button disabled={otpForm.formState.isSubmitting} type="submit">
-        {otpForm.formState.isSubmitting
-          ? copy.auth.loading
-          : copy.auth.submitOtp}
+      {retrySeconds !== null ? (
+        <p className="text-sm text-[#A7AEB9]" role="status">
+          {copy.auth.retryWaitPrefix} {formatRetryCountdown(retrySeconds)}
+        </p>
+      ) : null}
+      <Button
+        disabled={otpForm.formState.isSubmitting || retrySeconds !== null}
+        type="submit"
+      >
+        {copy.auth.submitOtp}
       </Button>
       <Button
         type="button"
         variant="secondary"
+        disabled={retrySeconds !== null}
         onClick={() => void resendCode()}
       >
         {copy.auth.resendCode}

@@ -3,6 +3,7 @@ import { copy } from "@veloxlane/brand/copy";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import { mapPhoneAuthMessage } from "@/lib/auth/phone-errors";
 import {
   assertPhoneAvailable,
   canSendOtp,
@@ -58,15 +59,22 @@ export async function POST(request: Request) {
   if (parsed.data.action === "send" || parsed.data.action === "resend") {
     const allowed = await canSendOtp(normalized);
     if (!allowed.allowed) {
+      const retryAfterSeconds = Math.max(
+        1,
+        Math.ceil((allowed.retryAfter.getTime() - Date.now()) / 1000),
+      );
       return NextResponse.json(
-        { message: copy.auth.errorRateLimited },
+        { message: copy.auth.errorRateLimited, retryAfterSeconds },
         { status: 429 },
       );
     }
 
     const { error } = await supabase.auth.updateUser({ phone: normalized });
     if (error) {
-      return NextResponse.json({ message: error.message }, { status: 400 });
+      return NextResponse.json(
+        { message: mapPhoneAuthMessage(error.message) },
+        { status: 400 },
+      );
     }
 
     await markOtpResent(normalized);
@@ -75,8 +83,12 @@ export async function POST(request: Request) {
 
   const verifyAllowed = await canVerifyOtp(normalized);
   if (!verifyAllowed.allowed) {
+    const retryAfterSeconds = Math.max(
+      1,
+      Math.ceil((verifyAllowed.retryAfter.getTime() - Date.now()) / 1000),
+    );
     return NextResponse.json(
-      { message: copy.auth.errorRateLimited },
+      { message: copy.auth.errorRateLimited, retryAfterSeconds },
       { status: 429 },
     );
   }
@@ -89,7 +101,10 @@ export async function POST(request: Request) {
 
   if (error) {
     await markOtpFailed(normalized);
-    return NextResponse.json({ message: error.message }, { status: 400 });
+    return NextResponse.json(
+      { message: mapPhoneAuthMessage(error.message) },
+      { status: 400 },
+    );
   }
 
   await markOtpVerified(normalized);

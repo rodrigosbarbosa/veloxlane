@@ -2,11 +2,12 @@
 
 import { canRetryIdentity } from "@veloxlane/auth";
 import { copy } from "@veloxlane/brand/copy";
-import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 
+import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
 import { StatusMessage } from "@/components/auth/status-message";
 import { Button } from "@/components/ui/button";
+import { loadStripeClient } from "@/lib/stripe/browser";
 import { createClient } from "@/lib/supabase/client";
 
 type IdentityProfile = {
@@ -85,9 +86,7 @@ export function VerifyIdForm() {
       return;
     }
 
-    const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
-    );
+    const stripe = await loadStripeClient();
 
     if (!stripe) {
       setLoading(false);
@@ -106,10 +105,18 @@ export function VerifyIdForm() {
     setStatus({ tone: "success", message: copy.auth.successIdentity });
   };
 
-  if (profile?.identityManualReview) {
+  if (!profile) {
+    return <AuthFormSkeleton fields={1} />;
+  }
+
+  if (profile.identityManualReview) {
     return (
       <StatusMessage tone="info" message={copy.auth.identityManualReviewNote} />
     );
+  }
+
+  if (loading) {
+    return <AuthFormSkeleton fields={1} />;
   }
 
   return (

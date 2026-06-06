@@ -13,7 +13,7 @@ export function AuthShell({ title, subtitle, children }: AuthShellProps) {
     <main className="min-h-screen bg-[#0A1628] px-4 py-10 text-[#F8F6F1]">
       <div className="mx-auto flex w-full max-w-md flex-col gap-8">
         <header className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#E8A03D]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#A7AEB9]">
             {copy.productName}
           </p>
           <div

@@ -21,7 +21,7 @@ export function Field({ label, error, hint, id, ...props }: FieldProps) {
       />
       {hint}
       {error ? (
-        <span id={`${fieldId}-error`} className="text-sm text-[#E8A03D]">
+        <span id={`${fieldId}-error`} className="text-sm text-[#A7AEB9]">
           {error}
         </span>
       ) : null}

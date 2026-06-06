@@ -173,7 +173,10 @@ export function createAuthHandlers(getState: () => MockAuthState) {
       if (body.action === "send" || body.action === "resend") {
         if (limit.cooldown_until) {
           return HttpResponse.json(
-            { message: copy.auth.errorRateLimited },
+            {
+              message: copy.auth.errorRateLimited,
+              retryAfterSeconds: 3600,
+            },
             { status: 429 },
           );
         }
@@ -183,7 +186,10 @@ export function createAuthHandlers(getState: () => MockAuthState) {
 
       if (limit.cooldown_until) {
         return HttpResponse.json(
-          { message: copy.auth.errorRateLimited },
+          {
+            message: copy.auth.errorRateLimited,
+            retryAfterSeconds: 3600,
+          },
           { status: 429 },
         );
       }
@@ -195,12 +201,15 @@ export function createAuthHandlers(getState: () => MockAuthState) {
             Date.now() + 24 * 60 * 60 * 1000,
           ).toISOString();
           return HttpResponse.json(
-            { message: copy.auth.errorRateLimited },
+            {
+              message: copy.auth.errorRateLimited,
+              retryAfterSeconds: 86_400,
+            },
             { status: 429 },
           );
         }
         return HttpResponse.json(
-          { message: "Invalid code. Try again." },
+          { message: copy.auth.errorInvalidOtp },
           { status: 400 },
         );
       }

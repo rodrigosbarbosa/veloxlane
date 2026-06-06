@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { AuthFormSkeleton } from "@/components/auth/auth-form-skeleton";
 import { Field } from "@/components/auth/field";
 import { StatusMessage } from "@/components/auth/status-message";
 import { Button } from "@/components/ui/button";
@@ -94,6 +95,10 @@ export function LoginForm() {
     });
   };
 
+  if (isSubmitting) {
+    return <AuthFormSkeleton fields={2} />;
+  }
+
   return (
     <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
       <Field
@@ -131,7 +136,10 @@ export function LoginForm() {
         {copy.auth.googleCta}
       </Button>
       <p className="text-sm text-[#A7AEB9]">
-        <Link className="text-[#E8A03D] underline" href="/forgot">
+        <Link
+          className="text-[#F8F6F1] underline underline-offset-2"
+          href="/forgot"
+        >
           {copy.auth.forgotPassword}
         </Link>
       </p>

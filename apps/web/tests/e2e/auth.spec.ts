@@ -6,6 +6,21 @@ const strongPassword = "VeloxLane1";
 const testPhone = "5555550100";
 const validOtp = "123456";
 
+async function typeInto(
+  page: import("@playwright/test").Page,
+  selector: string,
+  value: string,
+) {
+  const field = page.locator(selector);
+  await field.click();
+  await field.fill(value);
+  await field.evaluate((element) => {
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+    element.dispatchEvent(new Event("change", { bubbles: true }));
+    element.dispatchEvent(new Event("blur", { bubbles: true }));
+  });
+}
+
 test.describe("auth onboarding", () => {
   test("happy path: signup → verify phone → verify ID → home", async ({
     page,
@@ -13,32 +28,24 @@ test.describe("auth onboarding", () => {
   }) => {
     await page.goto("/signup");
 
-    await page.getByLabel(copy.auth.fullNameLabel).fill("Test Seller");
-    await page.getByLabel(copy.auth.emailLabel).fill("seller@example.com");
-    await page.locator("#password").fill(strongPassword);
-    await page.locator("#confirmPassword").fill(strongPassword);
+    await typeInto(page, "[name='fullName']", "Test Seller");
+    await typeInto(page, "[name='email']", "seller@example.com");
+    await typeInto(page, "#password", strongPassword);
+    await typeInto(page, "#confirmPassword", strongPassword);
     await page.getByRole("radio", { name: copy.auth.roleSeller }).check();
 
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
     await expect(page).toHaveURL(/\/verify-phone/);
 
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await typeInto(page, "[name='phone']", testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
 
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
-    await page.getByLabel(copy.auth.otpLabel).fill(validOtp);
+    await typeInto(page, "[name='token']", validOtp);
     await page.getByRole("button", { name: copy.auth.submitOtp }).click();
 
     await expect(page).toHaveURL(/\/verify-id/);
     expect(authState.profile?.phone_verified).toBe(true);
-
-    await page.route("https://api.stripe.com/**", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({ id: "vs_test_mock", status: "verified" }),
-      });
-    });
 
     await page.getByRole("button", { name: copy.auth.submitIdentity }).click();
     await expect(page.getByText(copy.auth.successIdentity)).toBeVisible({
@@ -49,21 +56,21 @@ test.describe("auth onboarding", () => {
   test("sad path: weak password shows specific guidance", async ({ page }) => {
     await page.goto("/signup");
 
-    await page.getByLabel(copy.auth.fullNameLabel).fill("Test Buyer");
-    await page.getByLabel(copy.auth.emailLabel).fill("buyer@example.com");
-    await page.locator("#password").fill("short");
-    await page.locator("#confirmPassword").fill("short");
+    await typeInto(page, "[name='fullName']", "Test Buyer");
+    await typeInto(page, "[name='email']", "buyer@example.com");
+    await typeInto(page, "#password", "short");
+    await typeInto(page, "#confirmPassword", "short");
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
 
-    await expect(
-      page.getByText("Password must be at least 8 characters."),
-    ).toBeVisible();
-    await page.locator("#password").fill("lowercase1");
-    await page.locator("#confirmPassword").fill("lowercase1");
+    await expect(page.locator("#password-error")).toHaveText(
+      "Password must be at least 8 characters.",
+    );
+    await typeInto(page, "#password", "lowercase1");
+    await typeInto(page, "#confirmPassword", "lowercase1");
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
-    await expect(
-      page.getByText("Include at least one uppercase letter."),
-    ).toBeVisible();
+    await expect(page.locator("#password-error")).toHaveText(
+      "Include at least one uppercase letter.",
+    );
   });
 
   test("sad path: OTP wrong 3x shows lockout message", async ({
@@ -84,14 +91,14 @@ test.describe("auth onboarding", () => {
     };
 
     await page.goto("/verify-phone");
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await typeInto(page, "[name='phone']", testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
 
     const otpField = page.getByLabel(copy.auth.otpLabel);
     await expect(otpField).toBeVisible();
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      await otpField.fill("000000");
+      await typeInto(page, "[name='token']", "000000");
       await page.getByRole("button", { name: copy.auth.submitOtp }).click();
     }
 
@@ -103,18 +110,18 @@ test.describe("auth onboarding", () => {
     authState,
   }) => {
     await page.goto("/signup");
-    await page.getByLabel(copy.auth.fullNameLabel).fill("Test Seller");
-    await page.getByLabel(copy.auth.emailLabel).fill("seller@example.com");
-    await page.locator("#password").fill(strongPassword);
-    await page.locator("#confirmPassword").fill(strongPassword);
+    await typeInto(page, "[name='fullName']", "Test Seller");
+    await typeInto(page, "[name='email']", "seller@example.com");
+    await typeInto(page, "#password", strongPassword);
+    await typeInto(page, "#confirmPassword", strongPassword);
     await page.getByRole("radio", { name: copy.auth.roleSeller }).check();
     await page.getByRole("button", { name: copy.auth.submitSignup }).click();
     await expect(page).toHaveURL(/\/verify-phone/);
 
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await typeInto(page, "[name='phone']", testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
-    await page.getByLabel(copy.auth.otpLabel).fill(validOtp);
+    await typeInto(page, "[name='token']", validOtp);
     await page.getByRole("button", { name: copy.auth.submitOtp }).click();
     await expect(page).toHaveURL(/\/verify-id/);
 
@@ -145,7 +152,7 @@ test.describe("auth onboarding", () => {
     };
 
     await page.goto("/verify-phone");
-    await page.getByLabel(copy.auth.phoneLabel).fill(testPhone);
+    await typeInto(page, "[name='phone']", testPhone);
     await page.getByRole("button", { name: copy.auth.submitPhone }).click();
     await expect(page.getByLabel(copy.auth.otpLabel)).toBeVisible();
 
