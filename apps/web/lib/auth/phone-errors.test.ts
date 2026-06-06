@@ -65,6 +65,28 @@ describe("mapPhoneAuthMessage", () => {
     );
   });
 
+  it("maps Twilio 21212 invalid Verify Service SID to send failure, not format error", () => {
+    expect(
+      mapPhoneAuthMessage(
+        {
+          message:
+            "Error sending phone_change OTP to provider: Invalid From Number (caller ID): VAfab4d8272d9838d7759651db90dd085c More information: https://www.twilio.com/docs/errors/21212",
+          code: "sms_send_failed",
+        },
+        "send",
+      ),
+    ).toBe(copy.auth.errorPhoneSendFailed);
+  });
+
+  it("does not treat provider invalid-number errors as user format errors", () => {
+    expect(
+      mapPhoneAuthMessage(
+        "Error sending phone_change OTP to provider: Invalid 'To' Phone Number More information: https://www.twilio.com/docs/errors/21211",
+        "send",
+      ),
+    ).toBe(copy.auth.errorPhoneSendFailed);
+  });
+
   it("extracts Twilio 20003 diagnostics for server logs", () => {
     expect(
       parsePhoneSendFailureDetails({
