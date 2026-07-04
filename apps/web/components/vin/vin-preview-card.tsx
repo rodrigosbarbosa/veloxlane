@@ -67,7 +67,7 @@ export function VinPreviewCard({
 
       <div className="vin-preview-grid">
         <article className="vin-preview-stat">
-          <p className="vin-preview-stat-label">CARFAX accidents</p>
+          <p className="vin-preview-stat-label">AutoCheck accidents</p>
           <p className="vin-preview-stat-value">
             {preview.carfax?.accidentCount ?? "—"}
           </p>

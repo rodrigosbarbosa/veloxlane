@@ -61,4 +61,4 @@ GitHub Actions runs `lint`, `typecheck`, `test`, and `build` on every pull reque
 
 ## Agent orientation
 
-See `AGENTS.md` and `.cursor/rules/` before working on money, escrow, auth, RLS, or plate privacy.
+Development happens in Claude Code. See `CLAUDE.md` (primary), `AGENTS.md`, and `.cursor/rules/` before working on money, escrow, auth, RLS, or plate privacy. Vehicle history is provided by AutoCheck (legacy `carfax`-named identifiers refer to this integration — see `docs/decisions/0002-autocheck-vehicle-history.md`).

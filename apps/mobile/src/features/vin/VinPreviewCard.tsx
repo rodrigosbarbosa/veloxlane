@@ -112,7 +112,7 @@ export function VinPreviewCard({
         }}
       >
         <Stat
-          label="CARFAX accidents"
+          label="AutoCheck accidents"
           value={String(preview.carfax?.accidentCount ?? "—")}
         />
         <Stat

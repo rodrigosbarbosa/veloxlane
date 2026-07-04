@@ -288,7 +288,7 @@ export function VinEntryForm({ onConfirm }: VinEntryFormProps) {
             void handleLookup();
           }}
         >
-          {loading ? "Pulling vehicle data…" : "Pull CARFAX + pricing"}
+          {loading ? "Pulling vehicle data…" : "Pull AutoCheck + pricing"}
         </Button>
       </div>
 
@@ -306,7 +306,8 @@ export function VinEntryForm({ onConfirm }: VinEntryFormProps) {
 
       {loading ? (
         <p className="vin-entry-loading" aria-live="polite">
-          Fetching CARFAX, NHTSA recalls, and fair-market pricing in parallel…
+          Fetching AutoCheck, NHTSA recalls, and fair-market pricing in
+          parallel…
         </p>
       ) : null}
     </div>

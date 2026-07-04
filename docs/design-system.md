@@ -87,7 +87,7 @@ All web components live in `packages/ui-web` and consume tokens directly. Mobile
 
 ### Verified Pills
 
-Signal Teal background at 12% opacity, Teal label, 999px radius, leading checkmark icon. Labels: `ID verified`, `Escrow protected`, `VIN matched`, `CARFAX pulled`. Never amber.
+Signal Teal background at 12% opacity, Teal label, 999px radius, leading checkmark icon. Labels: `ID verified`, `Escrow protected`, `VIN matched`, `AutoCheck pulled`. Never amber.
 
 ### Inputs
 

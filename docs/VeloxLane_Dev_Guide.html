@@ -526,7 +526,7 @@
     <div class="hero-meta">
       <span class="meta-pill amber">Next.js 14 · React Native · Expo</span>
       <span class="meta-pill teal">Supabase · GitHub · Vercel</span>
-      <span class="meta-pill">Escrow.com · Stripe · CARFAX</span>
+      <span class="meta-pill">Escrow.com · Stripe · AutoCheck</span>
       <span class="meta-pill">Cursor · Composer 2.5 · MCP</span>
     </div>
   </div>
@@ -599,7 +599,7 @@
         <li>Scaffolding, config, and CI/CD wiring</li>
         <li>CRUD endpoints and Supabase queries against a known schema</li>
         <li>UI screens built from the established design system</li>
-        <li>Integrations that follow vendor docs (CARFAX, Twilio, Maps)</li>
+        <li>Integrations that follow vendor docs (AutoCheck, Twilio, Maps)</li>
         <li>Tests written against a clear spec</li>
         <li>Routine mobile screens, deep links, store config</li>
         <li>Marketing copy and SEO content (brand voice)</li>
@@ -632,7 +632,7 @@
   <div class="section-head">
     <span class="section-num">§ 03 — Pre-Flight Checklist</span>
     <h2>Accounts, keys, and infrastructure to set up before any code is written.</h2>
-    <p>Do not skip this section. Every API key, account, and partner application below blocks at least one development task. Get them all queued before kickoff — some (CARFAX, Escrow.com) take 1–3 weeks to approve.</p>
+    <p>Do not skip this section. Every API key, account, and partner application below blocks at least one development task. Get them all queued before kickoff — some (AutoCheck, Escrow.com) take 1–3 weeks to approve.</p>
   </div>
 
   <!-- Legal & Business -->
@@ -689,7 +689,7 @@
       </div>
       <div class="check-item">
         <input type="checkbox" />
-        <span class="check-text"><strong>CARFAX Data Partner Program</strong> — apply at carfax.com/business (negotiated bulk rate $4–8/report)</span>
+        <span class="check-text"><strong>AutoCheck Data Partner Program</strong> — apply at autocheck.com/business (negotiated bulk rate $4–8/report)</span>
         <span class="tag you">YOU</span>
       </div>
       <div class="check-item">
@@ -840,7 +840,7 @@
         <tr><td><strong>Stripe</strong> (platform fees)</td><td><span class="pill priority-p2">Yes</span></td><td>Test-mode keys (<code>pk_test</code>/<code>sk_test</code>), a test webhook signing secret, the Stripe CLI for webhook forwarding, and the test cards (<code>4242…</code> success, <code>4000…0002</code> decline, a 3DS card).</td></tr>
         <tr><td><strong>Stripe Identity</strong></td><td><span class="pill priority-p2">Yes</span></td><td>Test mode issues simulated verifications — no real IDs needed. Verify the <code>id_verified</code> webhook path end-to-end.</td></tr>
         <tr><td><strong>Escrow.com</strong></td><td><span class="pill priority-p2">Yes</span></td><td>Sandbox environment + sandbox API key + sandbox webhook secret. Create test buyer + seller accounts. Run a full offer→fund→release in sandbox.</td></tr>
-        <tr><td><strong>CARFAX</strong></td><td><span class="pill priority-p1">Partner-gated</span></td><td>Partner test access + a list of known test VINs <em>if</em> the program provides one. If sandbox access lags, stand up a <strong>mock</strong> (MSW / fixture responses) so dev and CI aren't blocked, and swap to live on approval.</td></tr>
+        <tr><td><strong>AutoCheck</strong></td><td><span class="pill priority-p1">Partner-gated</span></td><td>Partner test access + a list of known test VINs <em>if</em> the program provides one. If sandbox access lags, stand up a <strong>mock</strong> (MSW / fixture responses) so dev and CI aren't blocked, and swap to live on approval.</td></tr>
         <tr><td><strong>Marketcheck</strong></td><td><span class="pill priority-p2">Yes</span></td><td>Trial/sandbox API key + sample VINs to exercise the fair-price range.</td></tr>
         <tr><td><strong>Twilio</strong></td><td><span class="pill priority-p2">Yes</span></td><td>Test credentials + Verify service SID. Use test/magic numbers for OTP. 10DLC registration is <em>not</em> required for the test flow — only for production sending.</td></tr>
         <tr><td><strong>AWS S3 + Rekognition</strong></td><td><span class="pill priority-p1">Live (cheap)</span></td><td>A staging S3 bucket pair (originals private, processed public via a staging CloudFront distribution) + an IAM key scoped to staging. Rekognition (photo QC only) has no sandbox but is ~$0.001/image — budget a few dollars.</td></tr>
@@ -868,7 +868,7 @@
       <div class="check-item"><input type="checkbox" /><span class="check-text">Point <code>staging.veloxlane.com</code> at the staging Vercel deploy (SSL auto)</span><span class="tag sonnet">BUILD</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Stripe</strong>: forward webhooks to staging via Stripe CLI; verify a test charge flips a listing to <code>active</code> and a $6 unlock reveals contact</span><span class="tag sonnet">BUILD</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Escrow.com sandbox</strong>: run a full offer → fund → release with test accounts; confirm every webhook updates state</span><span class="tag sonnet">BUILD</span></div>
-      <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>CARFAX</strong>: confirm sandbox VINs work, or stand up the MSW mock so dev + CI never block on partner approval</span><span class="tag sonnet">BUILD</span></div>
+      <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>AutoCheck</strong>: confirm sandbox VINs work, or stand up the MSW mock so dev + CI never block on partner approval</span><span class="tag sonnet">BUILD</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Twilio</strong>: verify OTP delivery to a test number; <strong>Stripe Identity</strong>: pass a simulated verification end-to-end</span><span class="tag sonnet">BUILD</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>S3 + Rekognition</strong>: upload a photo to the staging bucket, confirm photo QC runs and the plate-cover pipeline writes a processed copy to the public bucket served via CloudFront</span><span class="tag sonnet">BUILD</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Plate detector</strong>: run the 20 reference photos through <code>detectPlates()</code>; confirm the active impl (Plate Recognizer or YOLO) returns a usable plate box, and that a missed plate fails safe to blur</span><span class="tag sonnet">BUILD</span></div>
@@ -896,7 +896,7 @@
       <ul>
         <li>Repo scaffolding, CI/CD, Supabase schema</li>
         <li>Auth: email, phone OTP, Stripe Identity</li>
-        <li>Listings: VIN entry, CARFAX pull, photo upload</li>
+        <li>Listings: VIN entry, AutoCheck pull, photo upload</li>
         <li>Marketplace browse + search (basic filters)</li>
         <li>Unlock flow ($6 via Stripe)</li>
         <li>In-app messaging</li>
@@ -977,7 +977,7 @@
 ├── supabase/
 │   ├── migrations/           <span class="comment"># SQL migration files</span>
 │   ├── seed.sql              <span class="comment"># Dev seed data</span>
-│   └── functions/            <span class="comment"># Edge functions (webhooks, CARFAX proxy)</span>
+│   └── functions/            <span class="comment"># Edge functions (webhooks, AutoCheck proxy)</span>
 ├── .github/workflows/        <span class="comment"># CI: lint, typecheck, test, e2e, deploy</span>
 ├── docs/                     <span class="comment"># API docs, runbooks, onboarding</span>
 ├── package.json              <span class="comment"># pnpm workspaces</span>
@@ -1110,7 +1110,7 @@ ESCROW_API_EMAIL=<span class="placeholder">partner@veloxlane.com</span>         
 ESCROW_API_KEY=<span class="placeholder">...</span>                                 <span class="comment"># SERVER ONLY</span>
 ESCROW_WEBHOOK_SECRET=<span class="placeholder">...</span>                          <span class="comment"># SERVER ONLY</span>
 
-<span class="comment"># ─────────── CARFAX — vehicle history on VIN (partner contract) ───────────</span>
+<span class="comment"># ─────────── AutoCheck — vehicle history on VIN (partner contract) ───────────</span>
 CARFAX_API_BASE=<span class="placeholder">https://...</span>                        <span class="comment"># SERVER ONLY</span>
 CARFAX_PARTNER_ID=<span class="placeholder">...</span>                              <span class="comment"># SERVER ONLY</span>
 CARFAX_API_KEY=<span class="placeholder">...</span>                                 <span class="comment"># SERVER ONLY</span>
@@ -1186,7 +1186,7 @@ CAPITALONE_AUTO_PARTNER_ID=<span class="placeholder">...</span></div>
         <tr><td><strong>Stripe</strong></td><td>Platform fees: listing, unlock, featured</td><td><code>stripe</code>, <code>@stripe/stripe-js</code>, <code>@stripe/stripe-react-native</code></td><td>dashboard.stripe.com → Developers → API keys</td><td><code>STRIPE_*</code></td></tr>
         <tr><td><strong>Stripe Identity</strong></td><td>Seller KYC (gov ID + selfie)</td><td>Stripe Identity (same SDK)</td><td>Stripe dashboard → Identity (enable)</td><td>uses <code>STRIPE_SECRET_KEY</code></td></tr>
         <tr><td><strong>Escrow.com</strong></td><td>Licensed escrow for vehicle funds</td><td>REST API (HTTP)</td><td>escrow.com → partner program → API</td><td><code>ESCROW_API_*</code>, <code>ESCROW_WEBHOOK_SECRET</code></td></tr>
-        <tr><td><strong>CARFAX</strong></td><td>Vehicle history on VIN entry</td><td>Partner REST API</td><td>carfax.com → business/partner program</td><td><code>CARFAX_PARTNER_ID</code>, <code>CARFAX_API_KEY</code></td></tr>
+        <tr><td><strong>AutoCheck</strong></td><td>Vehicle history on VIN entry</td><td>Partner REST API</td><td>autocheck.com → business/partner program</td><td><code>CARFAX_PARTNER_ID</code>, <code>CARFAX_API_KEY</code></td></tr>
         <tr><td><strong>Marketcheck</strong></td><td>Fair-market price range</td><td>REST API</td><td>marketcheck.com → API plans</td><td><code>MARKETCHECK_API_KEY</code></td></tr>
         <tr><td><strong>NHTSA vPIC</strong></td><td>Recalls + VIN decode (free)</td><td>Public REST</td><td>No key — public endpoint</td><td><code>NHTSA_API_BASE</code></td></tr>
         <tr><td><strong>Twilio</strong></td><td>SMS OTP + handoff link</td><td><code>twilio</code> (Verify + Messaging)</td><td>twilio.com → Console</td><td><code>TWILIO_*</code></td></tr>
@@ -1243,7 +1243,7 @@ CAPITALONE_AUTO_PARTNER_ID=<span class="placeholder">...</span></div>
         <tr><td><span class="mono">P1.06</span></td><td>Auth flow (email + phone + Stripe Identity)</td><td><span class="pill model-opus">Plan</span></td><td>P1.03, P1.05</td></tr>
         <tr><td><span class="mono">P1.07</span></td><td>Auth E2E tests + design review</td><td><span class="pill model-sonnet">Build</span></td><td>P1.06</td></tr>
         <tr><td><span class="mono">P1.08</span></td><td>Stripe platform payments (revenue engine)</td><td><span class="pill model-opus">Plan</span></td><td>P1.03</td></tr>
-        <tr><td><span class="mono">P1.09</span></td><td>VIN entry &amp; CARFAX integration</td><td><span class="pill model-sonnet">Build</span></td><td>P1.06</td></tr>
+        <tr><td><span class="mono">P1.09</span></td><td>VIN entry &amp; AutoCheck integration</td><td><span class="pill model-sonnet">Build</span></td><td>P1.06</td></tr>
         <tr><td><span class="mono">P1.10</span></td><td>Photo upload (10-slot, MVP)</td><td><span class="pill model-sonnet">Build</span></td><td>P1.03, P1.06</td></tr>
         <tr><td><span class="mono">P1.11</span></td><td>Listing publish flow + listing fee</td><td><span class="pill model-sonnet">Build</span></td><td>P1.08, P1.09, P1.10</td></tr>
         <tr><td><span class="mono">P1.12</span></td><td>Marketplace browse + search</td><td><span class="pill model-sonnet">Build</span></td><td>P1.11</td></tr>
@@ -1558,7 +1558,7 @@ LOCATION: apps/mobile
 NAVIGATION (Expo Router, file-based — match blueprint section 5.2):
   Tabs:
     (browse)  — Search, Filters, Listing Detail, Photo Gallery, Unlock, Offer
-    (sell)    — VIN Entry/Scan, CARFAX Preview, Photo Guide, Capture, Price, Publish
+    (sell)    — VIN Entry/Scan, AutoCheck Preview, Photo Guide, Capture, Price, Publish
     (inbox)   — Threads, Thread Detail, Offer Review, Schedule
     (deals)   — Active Deals, Escrow Status, E-sign, History
     (profile) — Account, My Listings, My Purchases, Verification, Settings
@@ -1686,7 +1686,7 @@ FEES TO SUPPORT:
   - Listing fee: $12 (charged at publish, P1.11)
   - Contact unlock: $6 (charged at unlock, P1.13)
   - Featured listing: $18 (optional 7-day boost)
-  - (Phase 2 add-ons: CARFAX bundle $12, buyer protection $9 — leave hooks)
+  - (Phase 2 add-ons: AutoCheck bundle $12, buyer protection $9 — leave hooks)
 
 DELIVERABLES:
   packages/db: add payments table
@@ -1721,13 +1721,13 @@ After:
 
   <div class="prompt-card">
     <div class="prompt-head">
-      <div class="prompt-title">P1.09 — VIN entry &amp; CARFAX integration</div>
+      <div class="prompt-title">P1.09 — VIN entry &amp; AutoCheck integration</div>
       <span class="prompt-agent sonnet">Composer · Agent</span>
     </div>
-    <div class="prompt-body">Build the VIN entry + CARFAX pull flow for seller listing creation.
+    <div class="prompt-body">Build the VIN entry + AutoCheck pull flow for seller listing creation.
 
 USER JOURNEY:
-  Seller clicks "Sell My Car" → enters or scans VIN → app pulls CARFAX +
+  Seller clicks "Sell My Car" → enters or scans VIN → app pulls AutoCheck +
   NHTSA recalls + Marketcheck pricing in parallel → shows preview with
   trust badge → seller confirms or edits
 
@@ -1737,18 +1737,18 @@ DELIVERABLES:
     - Real-time validation (checksum digit)
     - "Scan VIN" button → opens BarcodeDetector API (Chrome) or fallback
     - Loading state while three APIs fetch in parallel
-    - Preview card showing: year/make/model, CARFAX accident count + owners,
+    - Preview card showing: year/make/model, AutoCheck accident count + owners,
       recall alerts, fair price range (color-coded bar)
   apps/mobile/app/(sell)/vin:
     - Same logic with expo-camera + expo-barcode-scanner for VIN barcode scan
   supabase/functions/carfax-proxy:
-    - Edge function that proxies CARFAX requests (NEVER expose CARFAX key
+    - Edge function that proxies AutoCheck requests (NEVER expose AutoCheck key
       to client). Cache results by VIN in a vin_lookups table with 90-day TTL.
   supabase/functions/marketcheck-proxy:
     - Same pattern. Cache pricing data 30-day TTL.
 
 CRITICAL:
-  - CARFAX is paid per call. Always check vin_lookups cache FIRST.
+  - AutoCheck is paid per call. Always check vin_lookups cache FIRST.
   - NHTSA API is free — never cache, always live.
   - If any API fails, degrade gracefully: show what we have, let seller continue
   - Never expose third-party API keys to the client
@@ -1766,7 +1766,7 @@ DATABASE:
 
 After implementation:
   - Unit tests for VIN validation, checksum, cache TTL logic
-  - Open PR "feat(listings): VIN entry + CARFAX + pricing"
+  - Open PR "feat(listings): VIN entry + AutoCheck + pricing"
   - Then run a review pass in a fresh Composer chat for design review of the preview card UI</div>
   </div>
 
@@ -1822,7 +1822,7 @@ After:
 (P1.09), photos (P1.10), and Stripe (P1.08).
 
 USER JOURNEY (the full create-listing wizard, web + mobile):
-  VIN + CARFAX (P1.09) → Photos (P1.10) → Price + description
+  VIN + AutoCheck (P1.09) → Photos (P1.10) → Price + description
   → Fair-price range shown (Marketcheck) → Escrow fee-split choice
   → Review summary → Pay $12 listing fee (P1.08) → Listing goes live
 
@@ -1868,7 +1868,7 @@ FILTERS (left sidebar on desktop, sheet on mobile):
   - Mileage range (slider, 0 to 300K)
   - Distance from ZIP (10/25/50/100/250 miles, requires Google Maps geocoding)
   - Body type, transmission, drivetrain (from carfax_data jsonb)
-  - With CARFAX clean history only (boolean)
+  - With AutoCheck clean history only (boolean)
   - With completed inspection only (boolean) — phase 2 toggle hidden in phase 1
 
 SORTING: newest, lowest price, lowest mileage, closest to me
@@ -1878,12 +1878,12 @@ LISTING CARD shows:
   - Year Make Model trim
   - Price + fair-price indicator badge
   - Mileage + city/state
-  - CARFAX clean badge (teal) if applicable
+  - AutoCheck clean badge (teal) if applicable
   - VeloxLane Protected badge on every card
 
 LISTING DETAIL page:
   - Photo gallery (full screen on tap)
-  - Spec table from CARFAX data
+  - Spec table from AutoCheck data
   - Price + fair-price bar
   - "Unlock contact" CTA → $6 Stripe payment → reveals masked phone
   - "Make offer" CTA (requires unlock first)
@@ -2162,7 +2162,7 @@ PHASE 1 MODULES (keep it lean — advanced modules are P2.10):
     Alert queue: flagged listings, failed photo QC, failed KYC, suspected dealers
   Listing management:
     Table of all listings + status; approve / remove / request more photos;
-    view attached CARFAX; edit price/description with audit trail
+    view attached AutoCheck; edit price/description with audit trail
   User management:
     Search by email/phone/VIN/listing id; view KYC status (masked docs);
     suspend/ban with reason codes; view deal history per user
@@ -2289,7 +2289,7 @@ After:
 integration pass on staging. This is the gate.
 
 RUN THE COMPLETE JOURNEYS END-TO-END ON STAGING:
-  1. Seller: signup → phone → ID → VIN → CARFAX → 4+ photos → price →
+  1. Seller: signup → phone → ID → VIN → AutoCheck → 4+ photos → price →
      fee split → pay $12 → listing live
   2. Buyer: browse → filter → open listing → unlock $6 → message seller →
      schedule test drive
@@ -2324,7 +2324,7 @@ DELIVERABLES:
   - expo-camera + expo-barcode-scanner on the VIN entry screen
   - "Scan VIN" → live camera, point at the barcode on the door jamb / dashboard
   - Decode Code 39 / Data Matrix (common VIN barcode formats) → autofill VIN
-  - Haptic + visual confirm on successful decode, then run the P1.09 CARFAX pull
+  - Haptic + visual confirm on successful decode, then run the P1.09 AutoCheck pull
   - Manual entry fallback always one tap away
   - Handle: glare, low light (torch toggle), partial/damaged barcode (retry hint)
 
@@ -2833,7 +2833,7 @@ DEALER DETECTION CONSOLE:
   - Appeal review queue (5-business-day SLA tracking)
 
 REVENUE & FINANCIAL REPORTS:
-  - Monthly revenue by stream: listing, unlock, featured, CARFAX bundle, affiliates
+  - Monthly revenue by stream: listing, unlock, featured, AutoCheck bundle, affiliates
   - Escrow.com partner commission statements
   - Affiliate payout tracking by partner (Endurance, CARCHEX, etc.)
   - Export to CSV/Excel for accounting
@@ -2996,10 +2996,10 @@ After:
       <div class="prompt-title">P3.03 — Certified listing program</div>
       <span class="prompt-agent sonnet">Composer · Agent</span>
     </div>
-    <div class="prompt-body">A premium trust tier: inspection-verified + CARFAX-clean listings get a badge.
+    <div class="prompt-body">A premium trust tier: inspection-verified + AutoCheck-clean listings get a badge.
 
 DELIVERABLES:
-  - "VeloxLane Certified" criteria engine (passed inspection + clean CARFAX +
+  - "VeloxLane Certified" criteria engine (passed inspection + clean AutoCheck +
     verified seller + complete 10-shot photo set)
   - Certified badge (brand-styled, teal + amber) across cards, detail, search filter
   - Optional certified upgrade fee (Stripe, P1.08)
@@ -3096,7 +3096,7 @@ After:
     </div>
     <div class="stack-card">
       <div class="cat">Vehicle Data</div>
-      <div class="tool">CARFAX API</div>
+      <div class="tool">AutoCheck API</div>
       <div class="desc">Partner program. $4–8 per report bulk rate. Brand differentiator.</div>
     </div>
     <div class="stack-card">
@@ -3188,9 +3188,9 @@ After:
     </div>
     <div class="checklist-body">
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>One primary action per screen.</strong> If a user lands on a screen and can't identify the next step in 2 seconds, the screen has failed.</span><span class="tag opus">PLAN</span></div>
-      <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Trust visible at every step.</strong> CARFAX badge, Escrow.com Protected badge, ID Verified pill — show them. They are the product.</span><span class="tag opus">PLAN</span></div>
+      <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Trust visible at every step.</strong> AutoCheck badge, Escrow.com Protected badge, ID Verified pill — show them. They are the product.</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Loading is not failure.</strong> Every async action has a skeleton or shimmer state. Never an unexplained spinner for more than 400ms.</span><span class="tag opus">PLAN</span></div>
-      <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Errors are conversations.</strong> Never "Error 400". Always "We couldn't reach CARFAX — try again or continue without it. Your listing is saved."</span><span class="tag opus">PLAN</span></div>
+      <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Errors are conversations.</strong> Never "Error 400". Always "We couldn't reach AutoCheck — try again or continue without it. Your listing is saved."</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text"><strong>Thumb-zone first on mobile.</strong> Primary CTA in the bottom third. Critical actions never at the very top of the screen.</span><span class="tag opus">PLAN</span></div>
     </div>
   </div>
@@ -3214,7 +3214,7 @@ After:
       <div class="check-item"><input type="checkbox" /><span class="check-text">Tabs (segmented control style on mobile)</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text">Skeleton loader, Shimmer (for card/list loading)</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text">Empty states (illustrated, with helpful next action)</span><span class="tag opus">PLAN</span></div>
-      <div class="check-item"><input type="checkbox" /><span class="check-text">Trust badge component (CARFAX, Escrow.com Protected, ID Verified, Plate Privacy)</span><span class="tag opus">PLAN</span></div>
+      <div class="check-item"><input type="checkbox" /><span class="check-text">Trust badge component (AutoCheck, Escrow.com Protected, ID Verified, Plate Privacy)</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text">Photo upload slot (10-grid layout, drag-handle, delete)</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text">Fair-price bar (color-coded under/fair/over market)</span><span class="tag opus">PLAN</span></div>
       <div class="check-item"><input type="checkbox" /><span class="check-text">Offer state timeline (visual state machine for buyer + seller)</span><span class="tag opus">PLAN</span></div>

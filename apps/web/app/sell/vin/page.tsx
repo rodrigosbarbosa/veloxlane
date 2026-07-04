@@ -28,7 +28,7 @@ export default function SellVinPage() {
           <p className="hero-eyebrow">Sell my car</p>
           <h1 className="hero-title">Match your VIN</h1>
           <p className="hero-copy">
-            Enter or scan your VIN once. We pull CARFAX history, live NHTSA
+            Enter or scan your VIN once. We pull AutoCheck history, live NHTSA
             recalls, and fair-market pricing before you add photos and price.
           </p>
           <p className="hero-tagline">{tagline}</p>

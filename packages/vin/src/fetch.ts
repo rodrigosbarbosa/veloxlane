@@ -58,7 +58,7 @@ export async function fetchVinLookupPreview(
       client,
       "carfax-proxy",
       vin,
-      "CARFAX history is unavailable right now.",
+      "AutoCheck history is unavailable right now.",
     ),
     invokeSource<MarketcheckData>(
       client,

@@ -1,3 +1,5 @@
+> **SUPERSEDED (2026-07-04).** This brief describes an earlier plan (Hermes/Codex orchestration, Express + Prisma API, Firebase Auth, CARFAX). The project is now developed in **Claude Code** on a Supabase-based stack, and the vehicle-history provider is **AutoCheck** — see `CLAUDE.md` at the repo root and `docs/decisions/0002-autocheck-vehicle-history.md`. Kept for historical context only.
+
 # VeloxLane Founder Brief
 
 To: Hermes (orchestrating agent)

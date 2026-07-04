@@ -166,8 +166,8 @@ export function VinEntryScreen({
             { color: mobileTheme.colors.text.onDarkMuted },
           ]}
         >
-          Enter or scan your VIN once. We pull CARFAX, live NHTSA recalls, and
-          fair-market pricing in parallel.
+          Enter or scan your VIN once. We pull AutoCheck, live NHTSA recalls,
+          and fair-market pricing in parallel.
         </Text>
       </View>
 
@@ -244,13 +244,13 @@ export function VinEntryScreen({
               { color: mobileTheme.colors.text.onDarkMuted },
             ]}
           >
-            Fetching CARFAX, NHTSA recalls, and fair-market pricing…
+            Fetching AutoCheck, NHTSA recalls, and fair-market pricing…
           </Text>
         </View>
       ) : (
         <PrimaryButton
           disabled={!isComplete || Boolean(validationMessage)}
-          label="Pull CARFAX + pricing"
+          label="Pull AutoCheck + pricing"
           onPress={() => {
             void handleLookup();
           }}

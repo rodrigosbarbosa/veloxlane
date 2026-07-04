@@ -132,7 +132,7 @@ Deno.serve(async (request) => {
     return jsonResponse(
       {
         message:
-          "CARFAX history is unavailable right now. You can still continue and add details manually.",
+          "AutoCheck history is unavailable right now. You can still continue and add details manually.",
         degraded: true,
       },
       503,
