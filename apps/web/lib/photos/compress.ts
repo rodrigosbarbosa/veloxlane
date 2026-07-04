@@ -46,6 +46,9 @@ async function convertHeicToJpeg(file: File): Promise<File> {
   });
 
   const blob = Array.isArray(converted) ? converted[0] : converted;
+  if (!blob) {
+    throw new Error("Unable to convert HEIC photo.");
+  }
   return new File([blob], file.name.replace(/\.heic$/i, ".jpg"), {
     type: "image/jpeg",
   });

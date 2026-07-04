@@ -1,12 +1,10 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Text, View } from "react-native";
 import type { VinLookupPreview } from "@veloxlane/vin";
 
 import { VinEntryScreen } from "~/features/vin/VinEntryScreen";
 import { createDraftListing } from "~/lib/photos-api";
 import { supabase } from "~/lib/supabase";
-import { mobileTheme, textStyle } from "~/theme/mobileTheme";
 
 export default function SellVinScreen() {
   const router = useRouter();

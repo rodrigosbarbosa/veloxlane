@@ -155,7 +155,7 @@ export function PhotoUploadGrid({
     }));
   };
 
-  const handleDrop = (slot: number, event: DragEvent<HTMLDivElement>) => {
+  const handleDrop = (slot: number, event: DragEvent) => {
     event.preventDefault();
     const file = event.dataTransfer.files.item(0);
     if (file) {

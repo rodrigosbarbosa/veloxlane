@@ -2,11 +2,14 @@ import { describe, expect, it } from "vitest";
 
 import {
   computeAverageLuminance,
+  getPhotoQcMessage,
+  getPhotoQcWarningMessage,
   isAspectRatioValid,
   validatePhotoBytes,
   validatePhotoDimensions,
   validatePhotoQc,
 } from "./qc";
+import { PHOTO_MAX_BYTES } from "./constants";
 
 describe("isAspectRatioValid", () => {
   it("accepts landscape ratios between 4:3 and 16:9", () => {
@@ -48,6 +51,28 @@ describe("validatePhotoDimensions", () => {
 });
 
 describe("validatePhotoQc", () => {
+  it("rejects oversize uploads through the combined validator", () => {
+    const result = validatePhotoQc({
+      byteLength: PHOTO_MAX_BYTES + 1,
+      width: 1600,
+      height: 1200,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.rejectReason).toBe("too_large");
+  });
+
+  it("rejects narrow uploads through the combined validator", () => {
+    const result = validatePhotoQc({
+      byteLength: 500_000,
+      width: 700,
+      height: 525,
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.rejectReason).toBe("too_narrow");
+  });
+
   it("collects luminance and duplicate warnings without blocking", () => {
     const result = validatePhotoQc({
       byteLength: 500_000,
@@ -60,10 +85,43 @@ describe("validatePhotoQc", () => {
     expect(result.ok).toBe(true);
     expect(result.warnings).toEqual(["too_dark", "duplicate_image"]);
   });
+
+  it("warns on very bright photos", () => {
+    const result = validatePhotoQc({
+      byteLength: 500_000,
+      width: 1600,
+      height: 1200,
+      averageLuminance: 230,
+    });
+
+    expect(result.warnings).toEqual(["too_bright"]);
+  });
 });
 
 describe("computeAverageLuminance", () => {
   it("returns the mean luminance", () => {
     expect(computeAverageLuminance([100, 200])).toBe(150);
+  });
+
+  it("returns a neutral default for empty samples", () => {
+    expect(computeAverageLuminance([])).toBe(128);
+  });
+});
+
+describe("photo QC messages", () => {
+  it("maps reject and warning reasons to copy", () => {
+    expect(getPhotoQcMessage("too_large")).toContain("800KB");
+    expect(getPhotoQcMessage("too_narrow")).toContain("800px");
+    expect(getPhotoQcMessage("invalid_aspect_ratio")).toContain("4:3");
+    expect(getPhotoQcWarningMessage("too_dark")).toContain("dark");
+    expect(getPhotoQcWarningMessage("too_bright")).toContain("bright");
+    expect(getPhotoQcWarningMessage("duplicate_image")).toContain("same image");
+  });
+});
+
+describe("validatePhotoDimensions edge cases", () => {
+  it("rejects invalid dimensions", () => {
+    expect(validatePhotoDimensions({ width: 0, height: 1200 }).ok).toBe(false);
+    expect(isAspectRatioValid(0, 1200)).toBe(false);
   });
 });

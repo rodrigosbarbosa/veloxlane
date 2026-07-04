@@ -21,6 +21,10 @@ describe("getPhotoSlotLabel", () => {
   it("returns a friendly label for known slots", () => {
     expect(getPhotoSlotLabel(7)).toBe("Dashboard + odometer");
   });
+
+  it("falls back for unknown slots", () => {
+    expect(getPhotoSlotLabel(99)).toBe("Photo 99");
+  });
 });
 
 describe("areRequiredPhotoSlotsFilled", () => {
