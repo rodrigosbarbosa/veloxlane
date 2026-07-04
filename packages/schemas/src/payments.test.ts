@@ -14,7 +14,7 @@ describe("platformPaymentTypeSchema", () => {
   });
 
   it("rejects Phase 2-only types", () => {
-    expect(() => platformPaymentTypeSchema.parse("carfax_bundle")).toThrow();
+    expect(() => platformPaymentTypeSchema.parse("autocheck_bundle")).toThrow();
   });
 });
 

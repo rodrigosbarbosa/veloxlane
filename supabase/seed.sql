@@ -141,7 +141,7 @@ VALUES
     2019,
     42000,
     16500.00,
-    'One-owner Florida commuter. Clean CARFAX, non-smoker, garage kept.',
+    'One-owner Florida commuter. Clean AutoCheck history, non-smoker, garage kept.',
     'active',
     'buyer',
     'Miami, FL',

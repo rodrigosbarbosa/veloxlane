@@ -46,7 +46,7 @@ describe("isPlatformPaymentType", () => {
   });
 
   it("excludes Phase 2 types", () => {
-    expect(isPlatformPaymentType("carfax_bundle")).toBe(false);
+    expect(isPlatformPaymentType("autocheck_bundle")).toBe(false);
     expect(isImplementedPaymentType("buyer_protection")).toBe(false);
   });
 });

@@ -7,7 +7,7 @@ const VALID_VIN = "1HGCM82633A004352";
 describe("mergeVinLookupPreview", () => {
   it("merges successful sources and surfaces partial errors", () => {
     const preview = mergeVinLookupPreview(VALID_VIN, {
-      carfax: {
+      autocheck: {
         ok: true,
         data: {
           year: 2003,
@@ -36,7 +36,7 @@ describe("mergeVinLookupPreview", () => {
     expect(preview.year).toBe(2003);
     expect(preview.make).toBe("Honda");
     expect(preview.model).toBe("Accord");
-    expect(preview.carfax?.accidentCount).toBe(0);
+    expect(preview.autocheck?.accidentCount).toBe(0);
     expect(preview.marketcheck).toBeNull();
     expect(preview.nhtsa?.recallCount).toBe(1);
     expect(preview.errors?.marketcheck).toBe("Pricing unavailable right now.");
@@ -44,7 +44,7 @@ describe("mergeVinLookupPreview", () => {
 
   it("falls back across sources for vehicle identity", () => {
     const preview = mergeVinLookupPreview(VALID_VIN, {
-      carfax: { ok: false, error: "CARFAX down" },
+      autocheck: { ok: false, error: "AutoCheck down" },
       marketcheck: {
         ok: true,
         data: {
@@ -60,7 +60,7 @@ describe("mergeVinLookupPreview", () => {
     expect(preview.year).toBe(2018);
     expect(preview.make).toBe("Tesla");
     expect(preview.model).toBe("Model 3");
-    expect(preview.errors?.carfax).toBe("CARFAX down");
+    expect(preview.errors?.autocheck).toBe("AutoCheck down");
     expect(preview.errors?.nhtsa).toBe("NHTSA down");
   });
 });
@@ -68,7 +68,7 @@ describe("mergeVinLookupPreview", () => {
 describe("mergeVinLookupPreview without errors", () => {
   it("omits errors when every source succeeds", () => {
     const preview = mergeVinLookupPreview(VALID_VIN, {
-      carfax: {
+      autocheck: {
         ok: true,
         data: { year: 2003, make: "Honda", model: "Accord", accidentCount: 0 },
       },
@@ -100,7 +100,7 @@ describe("mergeVinLookupPreview without errors", () => {
 
   it("uses NHTSA identity when paid sources are missing", () => {
     const preview = mergeVinLookupPreview(VALID_VIN, {
-      carfax: { ok: false, error: "down" },
+      autocheck: { ok: false, error: "down" },
       marketcheck: { ok: false, error: "down" },
       nhtsa: {
         ok: true,

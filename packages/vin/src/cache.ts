@@ -1,13 +1,13 @@
-/** CARFAX is paid per call — cache aggressively. */
-export const CARFAX_CACHE_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+/** AutoCheck is paid per call — cache aggressively. */
+export const AUTOCHECK_CACHE_TTL_MS = 90 * 24 * 60 * 60 * 1000;
 
 /** Marketcheck pricing — refresh monthly. */
 export const MARKETCHECK_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
-export type CacheSource = "carfax" | "marketcheck";
+export type CacheSource = "autocheck" | "marketcheck";
 
 const TTL_BY_SOURCE: Record<CacheSource, number> = {
-  carfax: CARFAX_CACHE_TTL_MS,
+  autocheck: AUTOCHECK_CACHE_TTL_MS,
   marketcheck: MARKETCHECK_CACHE_TTL_MS,
 };
 

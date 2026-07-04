@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const carfaxDataSchema = z.object({
+export const autocheckDataSchema = z.object({
   year: z.number().int().optional(),
   make: z.string().optional(),
   model: z.string().optional(),
@@ -8,6 +8,8 @@ export const carfaxDataSchema = z.object({
   ownerCount: z.number().int().positive().optional(),
   titleIssues: z.boolean().optional(),
   serviceRecords: z.number().int().nonnegative().optional(),
+  /** AutoCheck Score (Experian's proprietary 1–100 vehicle score). */
+  score: z.number().int().optional(),
   cached: z.boolean().optional(),
   stub: z.boolean().optional(),
 });
@@ -45,19 +47,19 @@ export const vinLookupPreviewSchema = z.object({
   year: z.number().int().optional(),
   make: z.string().optional(),
   model: z.string().optional(),
-  carfax: carfaxDataSchema.nullable(),
+  autocheck: autocheckDataSchema.nullable(),
   marketcheck: marketcheckDataSchema.nullable(),
   nhtsa: nhtsaDataSchema.nullable(),
   errors: z
     .object({
-      carfax: z.string().optional(),
+      autocheck: z.string().optional(),
       marketcheck: z.string().optional(),
       nhtsa: z.string().optional(),
     })
     .optional(),
 });
 
-export type CarfaxData = z.infer<typeof carfaxDataSchema>;
+export type AutocheckData = z.infer<typeof autocheckDataSchema>;
 export type MarketcheckData = z.infer<typeof marketcheckDataSchema>;
 export type NhtsaData = z.infer<typeof nhtsaDataSchema>;
 export type VinLookupPreview = z.infer<typeof vinLookupPreviewSchema>;

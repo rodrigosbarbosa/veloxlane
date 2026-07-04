@@ -1,5 +1,5 @@
 import { PlaceholderScreen } from "~/components/PlaceholderScreen";
 
-export default function CarfaxPreviewScreen() {
+export default function AutocheckPreviewScreen() {
   return <PlaceholderScreen title="AutoCheck Preview" />;
 }

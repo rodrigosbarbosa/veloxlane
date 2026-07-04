@@ -69,17 +69,17 @@ export function VinPreviewCard({
         <article className="vin-preview-stat">
           <p className="vin-preview-stat-label">AutoCheck accidents</p>
           <p className="vin-preview-stat-value">
-            {preview.carfax?.accidentCount ?? "—"}
+            {preview.autocheck?.accidentCount ?? "—"}
           </p>
-          {preview.errors?.carfax ? (
-            <p className="vin-preview-note">{preview.errors.carfax}</p>
+          {preview.errors?.autocheck ? (
+            <p className="vin-preview-note">{preview.errors.autocheck}</p>
           ) : null}
         </article>
 
         <article className="vin-preview-stat">
           <p className="vin-preview-stat-label">Owners</p>
           <p className="vin-preview-stat-value">
-            {preview.carfax?.ownerCount ?? "—"}
+            {preview.autocheck?.ownerCount ?? "—"}
           </p>
         </article>
 

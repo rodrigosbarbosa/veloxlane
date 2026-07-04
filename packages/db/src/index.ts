@@ -100,6 +100,8 @@ export type Database = {
           price: number;
           description: string | null;
           status: string;
+          autocheck_data: Json | null;
+          /** @deprecated legacy column — superseded by autocheck_data (migration 013). */
           carfax_data: Json | null;
           escrow_fee_mode: string | null;
           location: string;
@@ -120,7 +122,7 @@ export type Database = {
           price?: number;
           description?: string | null;
           status?: string;
-          carfax_data?: Json | null;
+          autocheck_data?: Json | null;
           escrow_fee_mode?: string | null;
           location: string;
           state: string;
@@ -138,7 +140,7 @@ export type Database = {
           price?: number;
           description?: string | null;
           status?: string;
-          carfax_data?: Json | null;
+          autocheck_data?: Json | null;
           escrow_fee_mode?: string | null;
           location?: string;
           state?: string;
@@ -226,6 +228,9 @@ export type Database = {
       vin_lookups: {
         Row: {
           vin: string;
+          autocheck_data: Json | null;
+          autocheck_fetched_at: string | null;
+          /** @deprecated legacy columns — superseded by autocheck_* (migration 013). */
           carfax_data: Json | null;
           carfax_fetched_at: string | null;
           marketcheck_data: Json | null;
@@ -236,8 +241,8 @@ export type Database = {
         };
         Insert: {
           vin: string;
-          carfax_data?: Json | null;
-          carfax_fetched_at?: string | null;
+          autocheck_data?: Json | null;
+          autocheck_fetched_at?: string | null;
           marketcheck_data?: Json | null;
           marketcheck_fetched_at?: string | null;
           nhtsa_recalls?: Json | null;
@@ -245,8 +250,8 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
-          carfax_data?: Json | null;
-          carfax_fetched_at?: string | null;
+          autocheck_data?: Json | null;
+          autocheck_fetched_at?: string | null;
           marketcheck_data?: Json | null;
           marketcheck_fetched_at?: string | null;
           nhtsa_recalls?: Json | null;

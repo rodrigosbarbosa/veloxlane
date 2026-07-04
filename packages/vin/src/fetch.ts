@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { mergeVinLookupPreview, type VinLookupSources } from "./lookup";
 import type {
-  CarfaxData,
+  AutocheckData,
   MarketcheckData,
   NhtsaData,
   VinLookupPreview,
@@ -53,10 +53,10 @@ export async function fetchVinLookupPreview(
   client: SupabaseClient,
   vin: string,
 ): Promise<VinLookupPreview> {
-  const [carfaxResult, marketcheckResult, nhtsaResult] = await Promise.all([
-    invokeSource<CarfaxData>(
+  const [autocheckResult, marketcheckResult, nhtsaResult] = await Promise.all([
+    invokeSource<AutocheckData>(
       client,
-      "carfax-proxy",
+      "autocheck-proxy",
       vin,
       "AutoCheck history is unavailable right now.",
     ),
@@ -75,7 +75,7 @@ export async function fetchVinLookupPreview(
   ]);
 
   const sources: VinLookupSources = {
-    carfax: carfaxResult,
+    autocheck: autocheckResult,
     marketcheck: marketcheckResult,
     nhtsa: nhtsaResult,
   };

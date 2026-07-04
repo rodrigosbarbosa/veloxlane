@@ -17,7 +17,7 @@ VeloxLane is a private-party vehicle marketplace (web + mobile + admin). Verifie
 
 ## Vehicle history provider: AutoCheck
 
-The vehicle-history provider is **AutoCheck** (Experian Automotive), not CARFAX. The project originally chose CARFAX, and internal identifiers still carry that name: `CARFAX_*` env vars, the `carfax_data` jsonb column, the `carfax-proxy` Edge Function, and `carfax`-named symbols in `packages/vin`. Treat all of them as the AutoCheck integration. Do NOT introduce new `carfax`-named identifiers; new code uses `autocheck` / vehicle-history naming. The full identifier rename (env vars, function, column migration) is a tracked follow-up.
+The vehicle-history provider is **AutoCheck** (Experian Automotive), not CARFAX. The project originally chose CARFAX; the identifier rename to `autocheck` naming has landed (`AUTOCHECK_*` env vars, `autocheck_data` columns via migration 013, the `autocheck-proxy` Edge Function, `autocheck`-named symbols in `packages/vin`). Do NOT introduce new `carfax`-named identifiers. Transitional leftovers pending cleanup: the deployed `carfax-proxy` Edge Function slug (repo dir is now a shim over the shared handler — delete after undeploy), deprecated `carfax_data`/`carfax_fetched_at` columns (drop in a follow-up migration), the legacy `carfax_bundle` value still accepted by the payments CHECK, and `CARFAX_*` secret fallback reads in `supabase/functions/_shared/autocheck.ts`.
 
 User-facing copy must say **AutoCheck** — never CARFAX.
 

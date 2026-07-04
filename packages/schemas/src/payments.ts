@@ -7,7 +7,7 @@ export const platformPaymentTypeSchema = z.enum([
 ]);
 
 export const phase2PaymentTypeSchema = z.enum([
-  "carfax_bundle",
+  "autocheck_bundle",
   "buyer_protection",
 ]);
 
@@ -15,7 +15,7 @@ export const paymentTypeSchema = z.enum([
   "listing",
   "unlock",
   "featured",
-  "carfax_bundle",
+  "autocheck_bundle",
   "buyer_protection",
 ]);
 

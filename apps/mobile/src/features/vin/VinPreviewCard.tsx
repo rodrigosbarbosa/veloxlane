@@ -113,16 +113,18 @@ export function VinPreviewCard({
       >
         <Stat
           label="AutoCheck accidents"
-          value={String(preview.carfax?.accidentCount ?? "—")}
+          value={String(preview.autocheck?.accidentCount ?? "—")}
         />
         <Stat
           label="Owners"
-          value={String(preview.carfax?.ownerCount ?? "—")}
+          value={String(preview.autocheck?.ownerCount ?? "—")}
         />
         <Stat label="Open recalls" value={String(recallCount)} />
       </View>
 
-      {preview.errors?.carfax ? <Note text={preview.errors.carfax} /> : null}
+      {preview.errors?.autocheck ? (
+        <Note text={preview.errors.autocheck} />
+      ) : null}
       {recallCount > 0 ? (
         <View
           style={{

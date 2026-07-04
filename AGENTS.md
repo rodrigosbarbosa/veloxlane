@@ -2,7 +2,7 @@
 
 Development happens in **Claude Code** — read `CLAUDE.md` at the repo root first; it is the primary orientation and mirrors the invariants in `.cursor/rules/`.
 
-VeloxLane is a private-party vehicle marketplace (Florida + Texas in Phase 1). Buyers and sellers connect on web and mobile; admins operate a separate dashboard. Vehicle purchase funds flow through **Escrow.com** — the platform never holds sale proceeds. Stripe handles platform fees only (listing, unlock, featured upgrades). Vehicle history comes from **AutoCheck** (legacy `carfax`-named identifiers in code refer to this integration — see `docs/decisions/0002-autocheck-vehicle-history.md`).
+VeloxLane is a private-party vehicle marketplace (Florida + Texas in Phase 1). Buyers and sellers connect on web and mobile; admins operate a separate dashboard. Vehicle purchase funds flow through **Escrow.com** — the platform never holds sale proceeds. Stripe handles platform fees only (listing, unlock, featured upgrades). Vehicle history comes from **AutoCheck** (`autocheck`-named identifiers; a few deprecated `carfax` leftovers remain during migration — see `docs/decisions/0002-autocheck-vehicle-history.md`).
 
 **Tagline:** Skip the lot. Take the lane.
 

@@ -20,3 +20,7 @@ Accepted (2026-07-04)
 - A follow-up rename is required: new `AUTOCHECK_*` env vars, an additive column migration (`carfax_data` → `vehicle_history_data` or `autocheck_data`), a renamed Edge Function, and updated symbols — coordinated with deployed function env config so nothing breaks mid-rename.
 - No new `carfax`-named identifiers may be introduced.
 - The API surface of the history report (fields, caching per VIN) must be re-validated against AutoCheck's partner API; report pricing and the buyer "history report bundle" add-on price should be re-quoted with Experian.
+
+## Status update (2026-07-04)
+
+The identifier rename has landed: `AUTOCHECK_*` env vars (with `CARFAX_*` fallback reads until secrets are rotated), `autocheck_data`/`autocheck_fetched_at` columns (additive migration 013; legacy columns deprecated, drop pending), the `autocheck-proxy` Edge Function (`carfax-proxy` kept as a shim until undeployed), renamed `packages/vin` symbols, and the `autocheck_bundle` payment type (migration 014; legacy value still accepted by the CHECK). Upstream API field mapping remains unverified pending Experian partner documentation.

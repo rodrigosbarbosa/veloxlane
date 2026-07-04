@@ -1,5 +1,5 @@
 import type {
-  CarfaxData,
+  AutocheckData,
   MarketcheckData,
   NhtsaData,
   VinLookupPreview,
@@ -10,19 +10,19 @@ type LookupSourceResult<T> =
   | { ok: false; error: string };
 
 export type VinLookupSources = {
-  carfax: LookupSourceResult<CarfaxData>;
+  autocheck: LookupSourceResult<AutocheckData>;
   marketcheck: LookupSourceResult<MarketcheckData>;
   nhtsa: LookupSourceResult<NhtsaData>;
 };
 
 function pickVehicleIdentity(
-  carfax: CarfaxData | null,
+  autocheck: AutocheckData | null,
   marketcheck: MarketcheckData | null,
   nhtsa: NhtsaData | null,
 ): Pick<VinLookupPreview, "year" | "make" | "model"> {
-  const year = carfax?.year ?? marketcheck?.year ?? nhtsa?.year;
-  const make = carfax?.make ?? marketcheck?.make ?? nhtsa?.make;
-  const model = carfax?.model ?? marketcheck?.model ?? nhtsa?.model;
+  const year = autocheck?.year ?? marketcheck?.year ?? nhtsa?.year;
+  const make = autocheck?.make ?? marketcheck?.make ?? nhtsa?.make;
+  const model = autocheck?.model ?? marketcheck?.model ?? nhtsa?.model;
 
   return { year, make, model };
 }
@@ -31,14 +31,14 @@ export function mergeVinLookupPreview(
   vin: string,
   sources: VinLookupSources,
 ): VinLookupPreview {
-  const carfax = sources.carfax.ok ? sources.carfax.data : null;
+  const autocheck = sources.autocheck.ok ? sources.autocheck.data : null;
   const marketcheck = sources.marketcheck.ok ? sources.marketcheck.data : null;
   const nhtsa = sources.nhtsa.ok ? sources.nhtsa.data : null;
 
   const errors: VinLookupPreview["errors"] = {};
 
-  if (!sources.carfax.ok) {
-    errors.carfax = sources.carfax.error;
+  if (!sources.autocheck.ok) {
+    errors.autocheck = sources.autocheck.error;
   }
 
   if (!sources.marketcheck.ok) {
@@ -49,12 +49,12 @@ export function mergeVinLookupPreview(
     errors.nhtsa = sources.nhtsa.error;
   }
 
-  const identity = pickVehicleIdentity(carfax, marketcheck, nhtsa);
+  const identity = pickVehicleIdentity(autocheck, marketcheck, nhtsa);
 
   return {
     vin,
     ...identity,
-    carfax,
+    autocheck,
     marketcheck,
     nhtsa,
     errors: Object.keys(errors).length > 0 ? errors : undefined,

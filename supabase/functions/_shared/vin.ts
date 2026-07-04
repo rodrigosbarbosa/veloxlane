@@ -38,15 +38,15 @@ const VIN_TRANSLITERATION: Record<string, number> = {
 const VIN_WEIGHTS = [
   8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2,
 ] as const;
-const CARFAX_CACHE_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+const AUTOCHECK_CACHE_TTL_MS = 90 * 24 * 60 * 60 * 1000;
 const MARKETCHECK_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
-type CacheSource = "carfax" | "marketcheck";
+type CacheSource = "autocheck" | "marketcheck";
 
 export type VinLookupRow = {
   vin: string;
-  carfax_data: Record<string, unknown> | null;
-  carfax_fetched_at: string | null;
+  autocheck_data: Record<string, unknown> | null;
+  autocheck_fetched_at: string | null;
   marketcheck_data: Record<string, unknown> | null;
   marketcheck_fetched_at: string | null;
   nhtsa_recalls: Record<string, unknown> | null;
@@ -110,7 +110,7 @@ function isCacheFresh(
   }
 
   const ttl =
-    source === "carfax" ? CARFAX_CACHE_TTL_MS : MARKETCHECK_CACHE_TTL_MS;
+    source === "autocheck" ? AUTOCHECK_CACHE_TTL_MS : MARKETCHECK_CACHE_TTL_MS;
   const ageMs = now.getTime() - fetchedMs;
   return ageMs >= 0 && ageMs < ttl;
 }
@@ -201,7 +201,7 @@ export async function readVinLookup(
   const { data, error } = await client
     .from("vin_lookups")
     .select(
-      "vin, carfax_data, carfax_fetched_at, marketcheck_data, marketcheck_fetched_at, nhtsa_recalls",
+      "vin, autocheck_data, autocheck_fetched_at, marketcheck_data, marketcheck_fetched_at, nhtsa_recalls",
     )
     .eq("vin", vin)
     .maybeSingle();
@@ -220,8 +220,8 @@ export async function upsertVinLookup(
   patch: Partial<
     Pick<
       VinLookupRow,
-      | "carfax_data"
-      | "carfax_fetched_at"
+      | "autocheck_data"
+      | "autocheck_fetched_at"
       | "marketcheck_data"
       | "marketcheck_fetched_at"
       | "nhtsa_recalls"
@@ -249,12 +249,12 @@ export function getCachedPayload<T extends Record<string, unknown>>(
     return null;
   }
 
-  if (source === "carfax") {
-    if (!isCacheFresh(row.carfax_fetched_at, "carfax")) {
+  if (source === "autocheck") {
+    if (!isCacheFresh(row.autocheck_fetched_at, "autocheck")) {
       return null;
     }
 
-    return row.carfax_data as T | null;
+    return row.autocheck_data as T | null;
   }
 
   if (!isCacheFresh(row.marketcheck_fetched_at, "marketcheck")) {

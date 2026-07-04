@@ -1,9 +1,3 @@
-// DEPRECATED: legacy name for the AutoCheck history proxy
-// (docs/decisions/0002-autocheck-vehicle-history.md). Kept only so the
-// already-deployed `carfax-proxy` slug keeps working while clients migrate to
-// `autocheck-proxy`. Delete this directory after undeploying the old function
-// (`supabase functions delete carfax-proxy`).
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 import { handleAutocheckRequest } from "../_shared/autocheck.ts";
