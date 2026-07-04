@@ -9,6 +9,8 @@ dist/
 build/
 .turbo/
 coverage/
+test-results/
+playwright-report/
 
 # env / secrets
 .env
