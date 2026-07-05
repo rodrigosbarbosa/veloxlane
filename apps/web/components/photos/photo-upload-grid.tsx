@@ -288,7 +288,6 @@ export function PhotoUploadGrid({
                   }}
                 />
                 {preview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={preview}
                     alt={definition.label}

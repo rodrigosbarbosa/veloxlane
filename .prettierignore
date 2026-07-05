@@ -1,0 +1,5 @@
+# pnpm-managed, not hand-authored
+pnpm-lock.yaml
+
+# static doc exports (tool-generated snapshots, not hand-maintained source)
+docs/*.html

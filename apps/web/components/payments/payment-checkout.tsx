@@ -26,7 +26,6 @@ export type PaymentCheckoutProps = {
 
 type CheckoutFormProps = {
   type: PlatformPaymentType;
-  relatedId: string;
   onSuccess?: (paymentIntentId: string) => void;
   onError?: (message: string) => void;
 };
@@ -37,12 +36,7 @@ type CreateIntentResponse = {
   amountCents: number;
 };
 
-function CheckoutForm({
-  type,
-  relatedId,
-  onSuccess,
-  onError,
-}: CheckoutFormProps) {
+function CheckoutForm({ type, onSuccess, onError }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
@@ -173,12 +167,7 @@ export function PaymentCheckout({
         options={{ clientSecret, appearance: { theme: "stripe" } }}
         stripe={stripePromise}
       >
-        <CheckoutForm
-          onError={onError}
-          onSuccess={onSuccess}
-          relatedId={relatedId}
-          type={type}
-        />
+        <CheckoutForm onError={onError} onSuccess={onSuccess} type={type} />
       </Elements>
     </div>
   );
