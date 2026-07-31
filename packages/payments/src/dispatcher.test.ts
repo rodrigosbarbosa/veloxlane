@@ -39,7 +39,6 @@ describe("dispatchPaymentSuccess", () => {
     expect(result).toEqual({
       action: "listing",
       relatedId: "listing-1",
-      stub: true,
     });
   });
 

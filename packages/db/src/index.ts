@@ -108,6 +108,7 @@ export type Database = {
           state: string;
           photos_count: number;
           published_at: string | null;
+          featured_until: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -128,6 +129,7 @@ export type Database = {
           state: string;
           photos_count?: number;
           published_at?: string | null;
+          featured_until?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -146,6 +148,7 @@ export type Database = {
           state?: string;
           photos_count?: number;
           published_at?: string | null;
+          featured_until?: string | null;
         };
         Relationships: [];
       };
