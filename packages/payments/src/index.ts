@@ -13,6 +13,16 @@ export {
   type PaymentDispatchResult,
 } from "./dispatcher";
 export {
+  FEATURED_DURATION_DAYS,
+  activateListingOnPayment,
+  applyFeaturedBoostOnPayment,
+  featuredUntilFrom,
+  revealUnlockOnPayment,
+  unlockAmountDollars,
+  type FulfillmentStore,
+  type UnlockInsert,
+} from "./fulfillment";
+export {
   PAYMENT_TYPE_LABELS,
   PHASE2_FEE_AMOUNTS,
   PLATFORM_FEE_AMOUNTS,

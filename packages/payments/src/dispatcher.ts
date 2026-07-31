@@ -11,7 +11,6 @@ export type PaymentDispatchContext = {
 export type PaymentDispatchResult = {
   action: PlatformPaymentType;
   relatedId: string | null;
-  stub: boolean;
 };
 
 export type PaymentDispatchDeps = {
@@ -56,7 +55,7 @@ export async function dispatchPaymentSuccess(
   switch (type) {
     case "listing":
       await deps.activateListing(relatedId, context.userId);
-      return { action: type, relatedId, stub: true };
+      return { action: type, relatedId };
     case "unlock":
       await deps.revealUnlock(
         relatedId,
@@ -64,10 +63,10 @@ export async function dispatchPaymentSuccess(
         context.stripePaymentIntentId,
         context.amountCents,
       );
-      return { action: type, relatedId, stub: true };
+      return { action: type, relatedId };
     case "featured":
       await deps.applyFeaturedBoost(relatedId, context.userId);
-      return { action: type, relatedId, stub: true };
+      return { action: type, relatedId };
     default: {
       const exhaustive: never = type;
       throw new PaymentDispatchError(`Unhandled payment type: ${exhaustive}`);

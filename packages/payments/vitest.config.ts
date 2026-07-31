@@ -4,7 +4,12 @@ export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      include: ["src/amounts.ts", "src/dispatcher.ts", "src/prices.ts"],
+      include: [
+        "src/amounts.ts",
+        "src/dispatcher.ts",
+        "src/fulfillment.ts",
+        "src/prices.ts",
+      ],
       thresholds: {
         lines: 100,
         functions: 100,
